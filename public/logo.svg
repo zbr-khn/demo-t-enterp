@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="waterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+  </defs>
+  <!-- Background Badge -->
+  <rect width="48" height="48" rx="14" fill="#0f172a" />
+  <!-- Water Drop Outline / Body -->
+  <path d="M24 8 C24 8, 14 20, 14 28 C14 33.52 18.48 38 24 38 C29.52 38 34 33.52 34 28 C34 20 24 8 24 8 Z" fill="url(#waterGrad)" />
+  <!-- Inner Highlight -->
+  <path d="M24 12 C24 12, 17 21, 17 27 C17 31 19.5 34 22 35 C20.5 33 20 30 20 28 C20 23 24 16 24 12 Z" fill="#ffffff" opacity="0.35" />
+  <!-- Letter T Motif -->
+  <path d="M19 21 H29 M24 21 V32" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Small Community Leaf / Sprout on bottom right corner -->
+  <circle cx="33" cy="33" r="5" fill="#0f172a" />
+  <path d="M33 30 C35.5 30 37 32 37 35 C34 35 32 33.5 32 31 Z" fill="url(#leafGrad)" />
+</svg>
