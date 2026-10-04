@@ -1,64 +1,41 @@
-# Tuba Enterprises — 20L Water Delivery & Community Support
+# Tuba Enterprises Website (demo-t-enterp)
 
-Official one-page website for **Tuba Enterprises**, a small local drinking-water delivery initiative based in Okhla, New Delhi.
+A polished, trustworthy, modern one-page website for **Tuba Enterprises**, a small local 20L drinking-water delivery initiative based in Okhla, New Delhi, supporting the education and welfare of 19 students at **Madarsa Darululoom Siddiquia**.
 
-Tuba Enterprises delivers 20-litre drinking-water bottles to homes on order. In addition to serving local families, the business helps support **Madarsa Darululoom Siddiquia** and the welfare, education, food, and daily needs of its 19 students.
+## Features
 
----
+- **Local 20L Water Delivery Showcase**: Highlights home delivery across Okhla with click-to-call ordering (`+91 9643088712`) and prefilled WhatsApp messaging.
+- **Community & Social Purpose**: Dignified and transparent presentation of Madarsa Darululoom Siddiquia and its 19 students.
+- **Direct UPI Donation**: Clear UPI support card with one-click copy functionality (`9866063694`) and UPI intent link.
+- **Responsive & Modern Design**: Built with React, Tailwind CSS, and Lucide icons. Mobile hamburger navigation and tap-friendly actions.
+- **Google Maps Directions**: Direct navigation link for the madrasa location in Johri Farm, Okhla.
 
-## 🌟 Features & Highlights
+## Tech Stack
 
-- **Clean & Dignified Design**: Tailored to feel like an authentic local neighborhood business.
-- **Direct Phone & WhatsApp Ordering**: Fast ordering links targeting `+91 9643088712`.
-- **Pre-filled Order Form**: Conveniently builds a structured WhatsApp delivery message with full customer details and bottle count.
-- **Madarsa Support Section**: Direct and transparent information about *Madarsa Darululoom Siddiquia* in Johri Farm, Okhla.
-- **One-Click UPI Contribution**: Interactive UPI copy button (`9866063694`) and mobile deep-link.
-- **Fully Responsive**: Mobile-first design with smooth navigation and accessible touch targets.
+- [React](https://react.dev/)
+- [Vite](https://vite.dev/)
+- [Tailwind CSS v4](https://tailwindcss.com/)
+- [Lucide React](https://lucide.dev/)
 
----
+## Getting Started
 
-## 🛠️ Tech Stack
+1. Clone repository:
+   ```bash
+   git clone https://github.com/zbr-khn/demo-t-enterp.git
+   cd demo-t-enterp
+   ```
 
-- **React 19**
-- **Vite**
-- **Tailwind CSS v4**
-- **Lucide React** (Icons)
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
----
+3. Run development server:
+   ```bash
+   npm run dev
+   ```
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js (v18+)
-- npm
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/zbr-khn/tuba-enterprises.git
-
-# Navigate into the project directory
-cd tuba-enterprises
-
-# Install dependencies
-npm install
-
-# Run the local development server
-npm run dev
-```
-
-### Production Build
-
-```bash
-npm run build
-```
-
----
-
-## 📍 Location & Contact
-
-- **Phone:** [+91 9643088712](tel:+919643088712)
-- **Madarsa Address:** Lane No. 4, Near Nabi Masjid, Johri Farm, Okhla, New Delhi - 110025
-- **Donation UPI:** `9866063694`
+4. Build for production:
+   ```bash
+   npm run build
+   ```
