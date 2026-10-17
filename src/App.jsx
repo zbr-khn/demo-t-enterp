@@ -124,6 +124,15 @@ export default function App() {
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
+    if (name === 'phone') {
+      // Allow only numbers and cap at exactly 10 digits
+      const digitsOnly = value.replace(/\D/g, '').slice(0, 10);
+      setFormData(prev => ({
+        ...prev,
+        phone: digitsOnly
+      }));
+      return;
+    }
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -154,6 +163,11 @@ export default function App() {
 
     if (!sanitizedName || !sanitizedPhone || !sanitizedAddress) {
       alert("Please enter a valid name, phone number, and address.");
+      return;
+    }
+
+    if (sanitizedPhone.length !== 10) {
+      alert("Please enter a valid 10-digit mobile number.");
       return;
     }
 
@@ -1122,11 +1136,13 @@ export default function App() {
                       id="phone"
                       name="phone"
                       required
-                      maxLength={15}
+                      inputMode="numeric"
+                      pattern="[0-9]{10}"
+                      maxLength={10}
                       autoComplete="tel"
                       value={formData.phone}
                       onChange={handleFormChange}
-                      placeholder="e.g. 9866063694"
+                      placeholder="10-digit mobile number"
                       className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm transition-colors"
                     />
                   </div>

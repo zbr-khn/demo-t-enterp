@@ -12,13 +12,12 @@ export function sanitizeText(input, maxLength = 250) {
     .slice(0, maxLength);
 }
 
-// Phone number sanitizer (only digits, optional leading plus, spaces/dashes)
+// Phone number sanitizer (strictly digits only, maximum 10 digits)
 export function sanitizePhone(input) {
   if (typeof input !== 'string') return '';
   return input
-    .trim()
-    .replace(/[^\d+\-\s]/g, '')
-    .slice(0, 16);
+    .replace(/\D/g, '')
+    .slice(0, 10);
 }
 
 // Client-side rate limiter using in-memory rolling window
