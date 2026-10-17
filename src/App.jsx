@@ -18,7 +18,9 @@ import {
   Sparkles,
   Calendar,
   Package,
-  Check
+  Check,
+  HelpCircle,
+  ArrowRight
 } from 'lucide-react';
 import { 
   sanitizeText, 
@@ -46,11 +48,13 @@ export default function App() {
   const [adminPassword, setAdminPassword] = useState('');
   const [adminError, setAdminError] = useState('');
   
-  // Order Form State
+  // Order Form State with Brand selection
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
     address: '',
+    brand: 'Bisleri',
+    customBrand: '',
     bottles: '1',
     preferredDate: '',
     message: ''
@@ -61,6 +65,62 @@ export default function App() {
   const SERVICE_LOCATION = "Johri Farm, Okhla, New Delhi - 110025";
   const MAPS_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Johri Farm, Okhla, New Delhi 110025");
   const WHATSAPP_DIRECT_URL = "https://wa.me/919866063694?text=" + encodeURIComponent("Hello Tuba Enterprises, I would like to order 20L drinking water bottles.");
+
+  // Brand catalogue details
+  const brands = [
+    {
+      id: 'bisleri',
+      name: 'Bisleri 20L',
+      tagline: 'With Added Minerals',
+      description: 'Trusted multi-stage purified drinking water jar with minerals.',
+      image: '/bisleri-20l.png',
+      themeColor: '#009775',
+      badgeBg: 'bg-[#e6f7f3]',
+      badgeText: 'text-[#009775]',
+      borderHover: 'hover:border-[#009775]',
+      popular: true,
+      accent: 'Bisleri'
+    },
+    {
+      id: 'alzo',
+      name: 'Alzo Life 20L',
+      tagline: 'Pure & Refreshing',
+      description: 'Premium quality treated packaged drinking water with tamper-evident yellow cap.',
+      image: '/alzo-20l.png',
+      themeColor: '#eab308',
+      badgeBg: 'bg-[#fefce8]',
+      badgeText: 'text-[#a16207]',
+      borderHover: 'hover:border-[#eab308]',
+      popular: false,
+      accent: 'Alzo'
+    },
+    {
+      id: 'bailey',
+      name: 'Bailey 20L',
+      tagline: 'Exclusive Mineral Water',
+      description: 'Packaged mineral water jar by Parle Agro with purple safety seal.',
+      image: '/bailey-20l.png',
+      themeColor: '#7c3aed',
+      badgeBg: 'bg-[#f5f3ff]',
+      badgeText: 'text-[#6d28d9]',
+      borderHover: 'hover:border-[#7c3aed]',
+      popular: false,
+      accent: 'Bailey'
+    }
+  ];
+
+  const handleSelectBrand = (brandName) => {
+    setFormData(prev => ({
+      ...prev,
+      brand: brandName,
+      customBrand: brandName === 'Other' ? prev.customBrand : ''
+    }));
+    // Scroll to order form
+    const formElement = document.getElementById('order-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -86,6 +146,8 @@ export default function App() {
     const sanitizedName = sanitizeText(formData.fullName, 60);
     const sanitizedPhone = sanitizePhone(formData.phone);
     const sanitizedAddress = sanitizeText(formData.address, 180);
+    const sanitizedBrand = sanitizeText(formData.brand, 40);
+    const sanitizedCustomBrand = sanitizeText(formData.customBrand, 50);
     const sanitizedBottles = sanitizeText(formData.bottles, 10);
     const sanitizedDate = sanitizeText(formData.preferredDate, 12);
     const sanitizedMessage = sanitizeText(formData.message, 250);
@@ -95,8 +157,12 @@ export default function App() {
       return;
     }
 
+    const brandDisplay = sanitizedBrand === 'Other' && sanitizedCustomBrand 
+      ? `Other (${sanitizedCustomBrand})` 
+      : sanitizedBrand;
+
     // 3. Construct WhatsApp delivery message with sanitized values
-    const messageText = `Hello Tuba Enterprises,\n\nI would like to request a 20L water bottle delivery:\n• Name: ${sanitizedName}\n• Phone: ${sanitizedPhone}\n• Address: ${sanitizedAddress}\n• Quantity: ${sanitizedBottles} (20-litre)\n${sanitizedDate ? `• Preferred Date: ${sanitizedDate}\n` : ''}${sanitizedMessage ? `• Note: ${sanitizedMessage}\n` : ''}\nThank you!`;
+    const messageText = `Hello Tuba Enterprises,\n\nI would like to request a 20L water bottle delivery:\n• Name: ${sanitizedName}\n• Phone: ${sanitizedPhone}\n• Address: ${sanitizedAddress}\n• Brand: ${brandDisplay}\n• Quantity: ${sanitizedBottles} (20-litre)\n${sanitizedDate ? `• Preferred Date: ${sanitizedDate}\n` : ''}${sanitizedMessage ? `• Note: ${sanitizedMessage}\n` : ''}\nThank you!`;
 
     const whatsappUrl = `https://wa.me/919866063694?text=${encodeURIComponent(messageText)}`;
     
@@ -171,6 +237,7 @@ export default function App() {
             <nav className="hidden md:flex items-center gap-7 text-[15px] font-semibold text-[#334155]">
               <a href="#home" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Home</a>
               <a href="#about" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">About Us</a>
+              <a href="#brands" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Water Brands</a>
               <a href="#delivery" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Water Delivery</a>
               <a href="#how-it-works" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">How It Works</a>
               <a href="#order-form" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Book Delivery</a>
@@ -230,6 +297,13 @@ export default function App() {
                 className="px-3 py-2 rounded-md hover:bg-slate-50 hover:text-[#0f766e]"
               >
                 About Us
+              </a>
+              <a 
+                href="#brands" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-md hover:bg-slate-50 hover:text-[#0f766e]"
+              >
+                Water Brands
               </a>
               <a 
                 href="#delivery" 
@@ -312,7 +386,7 @@ export default function App() {
               </h1>
 
               <p className="text-lg sm:text-xl text-slate-600 leading-relaxed max-w-2xl font-normal">
-                Reliable 20-litre drinking-water bottle delivery serving homes, apartments, and families across Okhla. Hygienic jars, prompt door-to-door delivery, and effortless phone or WhatsApp ordering.
+                Reliable 20-litre drinking-water bottle delivery serving homes, apartments, and offices in Okhla. Choose from top brands including <strong className="text-slate-900 font-semibold">Bisleri</strong>, <strong className="text-slate-900 font-semibold">Alzo</strong>, and <strong className="text-slate-900 font-semibold">Bailey</strong>, or enquire about custom brands.
               </p>
 
               {/* CTAs */}
@@ -349,7 +423,7 @@ export default function App() {
                 <p className="text-sm font-medium text-slate-600 flex flex-wrap items-center gap-y-2 gap-x-4">
                   <span className="inline-flex items-center gap-1.5 text-slate-800 font-semibold">
                     <CheckCircle2 className="w-4 h-4 text-[#0f766e]" />
-                    20L Sanitized Bottles
+                    Top Brands: Bisleri, Alzo, Bailey
                   </span>
                   <span className="text-slate-300 hidden sm:inline">•</span>
                   <span className="inline-flex items-center gap-1.5 text-slate-800 font-semibold">
@@ -374,11 +448,11 @@ export default function App() {
                 <div className="absolute -inset-4 bg-gradient-to-tr from-[#ccfbf1]/60 to-[#ecfccb]/60 rounded-3xl blur-2xl -z-10 transform rotate-1"></div>
                 
                 <div className="bg-white p-3 sm:p-4 rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden relative group hover:shadow-2xl transition-all duration-300">
-                  <div className="aspect-square rounded-2xl overflow-hidden bg-slate-50 relative">
+                  <div className="aspect-square rounded-2xl overflow-hidden bg-slate-50 relative flex items-center justify-center p-2">
                     <img 
-                      src="/water-bottle-20l.jpg" 
-                      alt="Tuba Enterprises 20L Pure Drinking Water Bottle" 
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      src="/bisleri-20l.png" 
+                      alt="Bisleri 20L Pure Drinking Water Bottle" 
+                      className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
                     />
 
                     {/* Logo Watermark Badge on Top Right */}
@@ -390,7 +464,7 @@ export default function App() {
                     <div className="absolute bottom-4 left-4 right-4 bg-[#1e293b]/95 backdrop-blur-md text-white p-3.5 rounded-xl shadow-lg border border-white/10 flex items-center justify-between">
                       <div>
                         <div className="text-xs uppercase tracking-wider text-[#5eead4] font-bold">Standard 20-Litre Jar</div>
-                        <div className="text-sm font-semibold text-white">Clean Drinking Water</div>
+                        <div className="text-sm font-semibold text-white">Bisleri • Alzo • Bailey</div>
                       </div>
                       <a
                         href={`tel:${PHONE_NUMBER}`}
@@ -410,8 +484,179 @@ export default function App() {
         </div>
       </section>
 
-      {/* ---------------- 3. ABOUT TUBA ENTERPRISES ---------------- */}
-      <section id="about" className="py-20 bg-white border-y border-slate-200">
+      {/* ---------------- 3. BRAND SELECTION CATALOGUE ---------------- */}
+      <section id="brands" className="py-20 bg-white border-y border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
+            <span className="text-xs font-bold tracking-widest text-[#0f766e] uppercase bg-[#f0fdfa] px-3.5 py-1 rounded-full border border-[#0f766e]/20">
+              Verified Quality Jars
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1e293b] font-['Outfit']">
+              Choose Your 20L Water Brand
+            </h2>
+            <p className="text-slate-600 text-lg">
+              We deliver genuine, factory-sealed 20-litre water bottles from India's trusted brands directly to your doorstep in Okhla.
+            </p>
+            <div className="w-16 h-1 bg-[#0f766e] mx-auto rounded-full"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            {/* Brand 1: Bisleri */}
+            <div className="bg-[#fbfbf9] rounded-3xl p-6 border border-slate-200 hover:border-[#009775] transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px] flex flex-col justify-between group">
+              <div>
+                <div className="relative aspect-3/4 rounded-2xl bg-white p-4 mb-5 border border-slate-100 flex items-center justify-center overflow-hidden">
+                  <img 
+                    src="/bisleri-20l.png" 
+                    alt="Bisleri 20L Water Bottle" 
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-3 left-3 bg-[#e6f7f3] text-[#009775] text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-[#009775]/20">
+                    Trusted Brand
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold text-[#1e293b] font-['Outfit'] mb-1">
+                  Bisleri 20L
+                </h3>
+                <div className="text-xs font-semibold text-[#009775] uppercase tracking-wider mb-2">
+                  With Added Minerals
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Multi-stage purified, ozonated, and mineral-enriched drinking water in standard 20L jars.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-200/80 flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleSelectBrand('Bisleri')}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#009775] hover:bg-[#007f62] text-white font-bold text-sm py-3 rounded-xl shadow-xs transition-colors cursor-pointer"
+                >
+                  <Droplet className="w-4 h-4 fill-white" />
+                  <span>Order Bisleri</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Brand 2: Alzo Life */}
+            <div className="bg-[#fbfbf9] rounded-3xl p-6 border border-slate-200 hover:border-[#eab308] transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px] flex flex-col justify-between group">
+              <div>
+                <div className="relative aspect-3/4 rounded-2xl bg-white p-4 mb-5 border border-slate-100 flex items-center justify-center overflow-hidden">
+                  <img 
+                    src="/alzo-20l.png" 
+                    alt="Alzo Life 20L Water Bottle" 
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-3 left-3 bg-[#fefce8] text-[#a16207] text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-[#eab308]/20">
+                    Treated Water
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold text-[#1e293b] font-['Outfit'] mb-1">
+                  Alzo Life 20L
+                </h3>
+                <div className="text-xs font-semibold text-[#a16207] uppercase tracking-wider mb-2">
+                  Packaged Drinking Water
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Fresh, crisp treated drinking water with tamper-evident yellow safety seal for clean daily home use.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-200/80 flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleSelectBrand('Alzo')}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#ca8a04] hover:bg-[#a16207] text-white font-bold text-sm py-3 rounded-xl shadow-xs transition-colors cursor-pointer"
+                >
+                  <Droplet className="w-4 h-4 fill-white" />
+                  <span>Order Alzo</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Brand 3: Bailey */}
+            <div className="bg-[#fbfbf9] rounded-3xl p-6 border border-slate-200 hover:border-[#7c3aed] transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px] flex flex-col justify-between group">
+              <div>
+                <div className="relative aspect-3/4 rounded-2xl bg-white p-4 mb-5 border border-slate-100 flex items-center justify-center overflow-hidden">
+                  <img 
+                    src="/bailey-20l.png" 
+                    alt="Bailey 20L Water Bottle" 
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-3 left-3 bg-[#f5f3ff] text-[#6d28d9] text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-[#7c3aed]/20">
+                    Parle Agro
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold text-[#1e293b] font-['Outfit'] mb-1">
+                  Bailey 20L
+                </h3>
+                <div className="text-xs font-semibold text-[#6d28d9] uppercase tracking-wider mb-2">
+                  Exclusive Mineral Water
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Signature packaged mineral water bottle with purple cap, recognized for purity and consistent taste.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-200/80 flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleSelectBrand('Bailey')}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] text-white font-bold text-sm py-3 rounded-xl shadow-xs transition-colors cursor-pointer"
+                >
+                  <Droplet className="w-4 h-4 fill-white" />
+                  <span>Order Bailey</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Option 4: Enquire for Another Brand */}
+            <div className="bg-gradient-to-b from-[#f0fdfa] to-white rounded-3xl p-6 border-2 border-dashed border-[#0f766e]/40 hover:border-[#0f766e] transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px] flex flex-col justify-between group text-center">
+              <div>
+                <div className="relative aspect-3/4 rounded-2xl bg-white p-6 mb-5 border border-[#0f766e]/20 flex flex-col items-center justify-center gap-3">
+                  <div className="w-16 h-16 rounded-full bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <HelpCircle className="w-8 h-8" />
+                  </div>
+                  <div className="text-sm font-bold text-[#1e293b] font-['Outfit']">Need Another Brand?</div>
+                  <p className="text-[11px] text-slate-500 leading-tight">
+                    Kinley, Aquafina, local RO, or specific bulk requirements.
+                  </p>
+                </div>
+
+                <h3 className="text-2xl font-bold text-[#1e293b] font-['Outfit'] mb-1">
+                  Custom Brand
+                </h3>
+                <div className="text-xs font-semibold text-[#0f766e] uppercase tracking-wider mb-2">
+                  Enquire on Demand
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Looking for a specific packaged water brand or commercial volume? We can arrange it for you.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-200/80 flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleSelectBrand('Other')}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold text-sm py-3 rounded-xl shadow-xs transition-colors cursor-pointer"
+                >
+                  <span>Enquire Brand</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ---------------- 4. ABOUT TUBA ENTERPRISES ---------------- */}
+      <section id="about" className="py-20 bg-[#fbfbf9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
@@ -433,25 +678,25 @@ export default function App() {
                 We specialize in delivering standard 20-litre drinking-water bottles directly to homes, residential apartments, and local shops. Our focus is on providing reliable, timely service with clean, safe drinking water you can count on daily.
               </p>
               <p className="text-slate-700 text-sm border-l-3 border-[#0f766e] pl-4 py-2 bg-[#f0fdfa] rounded-r-lg">
-                Ordering water is straightforward: simply call us or send a quick message on WhatsApp, and our delivery person will deliver your 20-litre bottle right to your doorstep.
+                Ordering water is straightforward: simply call us, choose your preferred brand (Bisleri, Alzo, Bailey, or custom), and our delivery person will deliver your 20-litre bottle right to your doorstep.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               
               {/* Card 1: Pure 20L Water */}
-              <div className="bg-[#fbfbf9] hover:bg-[#f0fdfa] p-6 rounded-2xl border border-slate-200 hover:border-[#0f766e]/30 transition-all duration-300 hover:translate-y-[-4px] text-center flex flex-col items-center shadow-2xs hover:shadow-md">
+              <div className="bg-white hover:bg-[#f0fdfa] p-6 rounded-2xl border border-slate-200 hover:border-[#0f766e]/30 transition-all duration-300 hover:translate-y-[-4px] text-center flex flex-col items-center shadow-2xs hover:shadow-md">
                 <div className="w-12 h-12 rounded-xl bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center mb-4">
                   <Droplet className="w-6 h-6 fill-[#0f766e]" />
                 </div>
-                <h3 className="font-bold text-slate-900 text-base mb-1 font-['Outfit']">Pure Water</h3>
+                <h3 className="font-bold text-slate-900 text-base mb-1 font-['Outfit']">Multiple Brands</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Hygienically packaged 20-litre bottles for safe, healthy drinking.
+                  Bisleri, Alzo, Bailey, and custom options available on order.
                 </p>
               </div>
 
               {/* Card 2: Doorstep Delivery */}
-              <div className="bg-[#fbfbf9] hover:bg-[#f0fdfa] p-6 rounded-2xl border border-slate-200 hover:border-[#0f766e]/30 transition-all duration-300 hover:translate-y-[-4px] text-center flex flex-col items-center shadow-2xs hover:shadow-md">
+              <div className="bg-white hover:bg-[#f0fdfa] p-6 rounded-2xl border border-slate-200 hover:border-[#0f766e]/30 transition-all duration-300 hover:translate-y-[-4px] text-center flex flex-col items-center shadow-2xs hover:shadow-md">
                 <div className="w-12 h-12 rounded-xl bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center mb-4">
                   <Truck className="w-6 h-6" />
                 </div>
@@ -462,7 +707,7 @@ export default function App() {
               </div>
 
               {/* Card 3: Instant Ordering */}
-              <div className="bg-[#fbfbf9] hover:bg-[#f0fdfa] p-6 rounded-2xl border border-slate-200 hover:border-[#0f766e]/30 transition-all duration-300 hover:translate-y-[-4px] text-center flex flex-col items-center shadow-2xs hover:shadow-md">
+              <div className="bg-white hover:bg-[#f0fdfa] p-6 rounded-2xl border border-slate-200 hover:border-[#0f766e]/30 transition-all duration-300 hover:translate-y-[-4px] text-center flex flex-col items-center shadow-2xs hover:shadow-md">
                 <div className="w-12 h-12 rounded-xl bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center mb-4">
                   <Phone className="w-6 h-6" />
                 </div>
@@ -478,8 +723,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* ---------------- 4. WATER DELIVERY SECTION ---------------- */}
-      <section id="delivery" className="py-20 bg-[#fbfbf9]">
+      {/* ---------------- 5. WATER DELIVERY SERVICE SECTION ---------------- */}
+      <section id="delivery" className="py-20 bg-white border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
@@ -495,19 +740,19 @@ export default function App() {
             <div className="w-16 h-1 bg-[#0f766e] mx-auto rounded-full"></div>
           </div>
 
-          <div className="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden hover:shadow-xl transition-all duration-300">
+          <div className="max-w-4xl mx-auto bg-[#fbfbf9] rounded-3xl border border-slate-200 shadow-md overflow-hidden hover:shadow-xl transition-all duration-300">
             <div className="grid grid-cols-1 md:grid-cols-12 items-center">
               
               {/* Product Visual */}
-              <div className="md:col-span-5 bg-[#f0fdfa]/50 p-6 sm:p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-200">
+              <div className="md:col-span-5 bg-white p-6 sm:p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-slate-200">
                 <div className="relative group max-w-xs">
                   <img 
-                    src="/water-bottle-20l.jpg" 
+                    src="/bisleri-20l.png" 
                     alt="20-Litre Water Bottle Home Delivery" 
-                    className="w-full h-auto rounded-2xl shadow-sm object-cover group-hover:scale-103 transition-transform duration-300"
+                    className="w-full h-auto rounded-2xl object-contain group-hover:scale-103 transition-transform duration-300"
                   />
-                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs text-[#1e293b] text-xs font-bold px-2.5 py-1 rounded-md border border-slate-200 shadow-2xs">
-                    20L Jar
+                  <div className="absolute top-3 left-3 bg-[#0f766e] text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-2xs">
+                    20L Jars
                   </div>
                 </div>
               </div>
@@ -519,34 +764,34 @@ export default function App() {
                     Clean Drinking-Water at Home
                   </h3>
                   <p className="text-slate-600 text-sm leading-relaxed">
-                    Have 20-litre water bottles brought directly to your home with dependable local service. Easy ordering with no complicated signups.
+                    Have 20-litre water bottles brought directly to your home with dependable local service. Choose your favorite brand with no complicated signups.
                   </p>
                 </div>
 
                 {/* Features List */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
                     <div className="w-8 h-8 rounded-lg bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center shrink-0">
                       <Droplet className="w-4 h-4 fill-[#0f766e]" />
                     </div>
                     <span className="text-sm font-semibold text-slate-800">20-litre water bottles</span>
                   </div>
 
-                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
                     <div className="w-8 h-8 rounded-lg bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center shrink-0">
                       <Truck className="w-4 h-4" />
                     </div>
                     <span className="text-sm font-semibold text-slate-800">Home delivery</span>
                   </div>
 
-                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
                     <div className="w-8 h-8 rounded-lg bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center shrink-0">
                       <MapPin className="w-4 h-4" />
                     </div>
                     <span className="text-sm font-semibold text-slate-800">Local Okhla service</span>
                   </div>
 
-                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
+                  <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
                     <div className="w-8 h-8 rounded-lg bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center shrink-0">
                       <Phone className="w-4 h-4" />
                     </div>
@@ -602,8 +847,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* ---------------- 5. HOW IT WORKS ---------------- */}
-      <section id="how-it-works" className="py-20 bg-white border-y border-slate-200">
+      {/* ---------------- 6. HOW IT WORKS ---------------- */}
+      <section id="how-it-works" className="py-20 bg-[#fbfbf9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
@@ -619,7 +864,7 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
             {/* Step 1 */}
-            <div className="relative bg-[#fbfbf9] rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all duration-300 hover:translate-y-[-4px] flex flex-col justify-between shadow-2xs hover:shadow-md">
+            <div className="relative bg-white rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all duration-300 hover:translate-y-[-4px] flex flex-col justify-between shadow-2xs hover:shadow-md">
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <span className="text-3xl font-extrabold text-[#0f766e] font-['Outfit']">01</span>
@@ -628,10 +873,10 @@ export default function App() {
                   </div>
                 </div>
                 <h3 className="text-xl font-bold text-[#1e293b] mb-2 font-['Outfit']">
-                  Place Your Order
+                  Choose Brand & Order
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Call Tuba Enterprises at <a href={`tel:${PHONE_NUMBER}`} className="font-semibold text-[#0f766e] hover:underline">{PHONE_DISPLAY}</a> or fill out our online delivery booking form.
+                  Select Bisleri, Alzo, Bailey, or your custom brand. Call <a href={`tel:${PHONE_NUMBER}`} className="font-semibold text-[#0f766e] hover:underline">{PHONE_DISPLAY}</a> or book online.
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-slate-200/80 text-xs font-medium text-slate-500 flex items-center gap-1.5">
@@ -640,7 +885,7 @@ export default function App() {
             </div>
 
             {/* Step 2 */}
-            <div className="relative bg-[#fbfbf9] rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all duration-300 hover:translate-y-[-4px] flex flex-col justify-between shadow-2xs hover:shadow-md">
+            <div className="relative bg-white rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all duration-300 hover:translate-y-[-4px] flex flex-col justify-between shadow-2xs hover:shadow-md">
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <span className="text-3xl font-extrabold text-[#0f766e] font-['Outfit']">02</span>
@@ -652,7 +897,7 @@ export default function App() {
                   We Deliver
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Your 20-litre water bottle is dispatched promptly and delivered directly to your doorstep in Okhla.
+                  Your sealed 20-litre water bottle is dispatched promptly and delivered directly to your doorstep in Okhla.
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-slate-200/80 text-xs font-medium text-slate-500 flex items-center gap-1.5">
@@ -661,7 +906,7 @@ export default function App() {
             </div>
 
             {/* Step 3 */}
-            <div className="relative bg-[#fbfbf9] rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all duration-300 hover:translate-y-[-4px] flex flex-col justify-between shadow-2xs hover:shadow-md">
+            <div className="relative bg-white rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all duration-300 hover:translate-y-[-4px] flex flex-col justify-between shadow-2xs hover:shadow-md">
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <span className="text-3xl font-extrabold text-[#0f766e] font-['Outfit']">03</span>
@@ -686,8 +931,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* ---------------- 6. WATER DELIVERY CONTACT & BOOKING FORM ---------------- */}
-      <section id="order-form" className="py-20 bg-[#fbfbf9] border-y border-slate-200">
+      {/* ---------------- 7. WATER DELIVERY CONTACT & BOOKING FORM ---------------- */}
+      <section id="order-form" className="py-20 bg-white border-y border-slate-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center space-y-4 mb-12">
@@ -698,12 +943,12 @@ export default function App() {
               Order Water for Your Home
             </h2>
             <p className="text-slate-600 text-base">
-              Fill in your delivery address below. Your order request will open directly in WhatsApp or you can dial us at {PHONE_DISPLAY}.
+              Select your water brand and enter your address below. Your request will open directly in WhatsApp or you can dial us at {PHONE_DISPLAY}.
             </p>
             <div className="w-16 h-1 bg-[#0f766e] mx-auto rounded-full"></div>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-md">
+          <div className="bg-[#fbfbf9] rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-md">
             
             {/* Rate limit warning banner */}
             {rateLimitError && (
@@ -756,6 +1001,99 @@ export default function App() {
             ) : (
               <form onSubmit={handleOrderSubmit} className="space-y-5" noValidate={false}>
                 
+                {/* Brand Selection Radio / Pills */}
+                <div className="space-y-2 text-left">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Select 20L Water Brand *
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    
+                    {/* Bisleri */}
+                    <button
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, brand: 'Bisleri' }))}
+                      className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
+                        formData.brand === 'Bisleri'
+                          ? 'border-[#009775] bg-[#e6f7f3]/50 text-[#009775] ring-2 ring-[#009775]/20 font-bold'
+                          : 'border-slate-300 bg-white hover:border-[#009775]/50 text-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-sm">Bisleri</span>
+                        {formData.brand === 'Bisleri' && <Check className="w-4 h-4 text-[#009775]" />}
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-normal">20L Jar</span>
+                    </button>
+
+                    {/* Alzo */}
+                    <button
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, brand: 'Alzo' }))}
+                      className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
+                        formData.brand === 'Alzo'
+                          ? 'border-[#ca8a04] bg-[#fefce8] text-[#a16207] ring-2 ring-[#ca8a04]/20 font-bold'
+                          : 'border-slate-300 bg-white hover:border-[#ca8a04]/50 text-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-sm">Alzo</span>
+                        {formData.brand === 'Alzo' && <Check className="w-4 h-4 text-[#ca8a04]" />}
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-normal">20L Jar</span>
+                    </button>
+
+                    {/* Bailey */}
+                    <button
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, brand: 'Bailey' }))}
+                      className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
+                        formData.brand === 'Bailey'
+                          ? 'border-[#7c3aed] bg-[#f5f3ff] text-[#6d28d9] ring-2 ring-[#7c3aed]/20 font-bold'
+                          : 'border-slate-300 bg-white hover:border-[#7c3aed]/50 text-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-sm">Bailey</span>
+                        {formData.brand === 'Bailey' && <Check className="w-4 h-4 text-[#7c3aed]" />}
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-normal">20L Jar</span>
+                    </button>
+
+                    {/* Enquire Another Brand */}
+                    <button
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, brand: 'Other' }))}
+                      className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
+                        formData.brand === 'Other'
+                          ? 'border-[#0f766e] bg-[#f0fdfa] text-[#0f766e] ring-2 ring-[#0f766e]/20 font-bold'
+                          : 'border-slate-300 bg-white hover:border-[#0f766e]/50 text-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-sm">Other Brand</span>
+                        {formData.brand === 'Other' && <Check className="w-4 h-4 text-[#0f766e]" />}
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-normal">Enquire</span>
+                    </button>
+
+                  </div>
+
+                  {/* If "Other Brand" is selected, show custom text input */}
+                  {formData.brand === 'Other' && (
+                    <div className="pt-2 animate-in fade-in">
+                      <input
+                        type="text"
+                        name="customBrand"
+                        required={formData.brand === 'Other'}
+                        value={formData.customBrand}
+                        onChange={handleFormChange}
+                        placeholder="Please specify brand name (e.g. Kinley, Aquafina, etc.)"
+                        className="w-full px-4 py-2.5 rounded-xl border border-[#0f766e]/50 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm"
+                      />
+                    </div>
+                  )}
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {/* Full Name */}
                   <div className="space-y-1.5 text-left">
@@ -772,7 +1110,7 @@ export default function App() {
                       value={formData.fullName}
                       onChange={handleFormChange}
                       placeholder="e.g. Farhan Khan"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm transition-colors"
                     />
                   </div>
 
@@ -791,7 +1129,7 @@ export default function App() {
                       value={formData.phone}
                       onChange={handleFormChange}
                       placeholder="e.g. 9866063694"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm transition-colors"
                     />
                   </div>
                 </div>
@@ -811,7 +1149,7 @@ export default function App() {
                     value={formData.address}
                     onChange={handleFormChange}
                     placeholder="House/Flat No., Lane No., Landmark, Johri Farm / Okhla, New Delhi"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm resize-none transition-colors"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm resize-none transition-colors"
                   ></textarea>
                 </div>
 
@@ -827,7 +1165,7 @@ export default function App() {
                       required
                       value={formData.bottles}
                       onChange={handleFormChange}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm transition-colors"
                     >
                       <option value="1">1 Bottle (20 Litre)</option>
                       <option value="2">2 Bottles (20 Litre each)</option>
@@ -848,7 +1186,7 @@ export default function App() {
                       name="preferredDate"
                       value={formData.preferredDate}
                       onChange={handleFormChange}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm transition-colors"
                     />
                   </div>
                 </div>
@@ -866,7 +1204,7 @@ export default function App() {
                     value={formData.message}
                     onChange={handleFormChange}
                     placeholder="e.g. Ring bell on 2nd floor, or deliver before noon"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm transition-colors"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm transition-colors"
                   />
                 </div>
 
@@ -891,8 +1229,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* ---------------- 7. CONTACT SECTION ---------------- */}
-      <section id="contact" className="py-20 bg-white">
+      {/* ---------------- 8. CONTACT SECTION ---------------- */}
+      <section id="contact" className="py-20 bg-[#fbfbf9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
@@ -908,14 +1246,14 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             
             {/* Phone & WhatsApp Card */}
-            <div className="bg-[#fbfbf9] rounded-3xl p-8 border border-slate-200 shadow-xs flex flex-col justify-between space-y-6 hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xs flex flex-col justify-between space-y-6 hover:shadow-md transition-shadow">
               <div className="space-y-3 text-left">
                 <div className="w-12 h-12 rounded-xl bg-[#f0fdfa] text-[#0f766e] flex items-center justify-center">
                   <Phone className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold text-[#1e293b] font-['Outfit']">Phone & WhatsApp Orders</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Call or WhatsApp us directly to schedule your 20-litre water bottle delivery or ask about our local route timings.
+                  Call or WhatsApp us directly to schedule your 20-litre water bottle delivery or ask about brand availability.
                 </p>
                 <div className="text-2xl font-mono font-bold text-slate-900 pt-1">
                   {PHONE_DISPLAY}
@@ -944,7 +1282,7 @@ export default function App() {
             </div>
 
             {/* Address Card */}
-            <div className="bg-[#fbfbf9] rounded-3xl p-8 border border-slate-200 shadow-xs flex flex-col justify-between space-y-6 hover:shadow-md transition-shadow">
+            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xs flex flex-col justify-between space-y-6 hover:shadow-md transition-shadow">
               <div className="space-y-3 text-left">
                 <div className="w-12 h-12 rounded-xl bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center">
                   <MapPin className="w-6 h-6" />
@@ -976,7 +1314,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* ---------------- 8. FOOTER ---------------- */}
+      {/* ---------------- 9. FOOTER ---------------- */}
       <footer className="bg-[#1e293b] text-slate-300 pt-16 pb-12 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -1001,7 +1339,7 @@ export default function App() {
                 “Pure Water. Delivered to Your Door.”
               </p>
               <p className="text-slate-400 text-xs leading-relaxed max-w-md">
-                Serving Okhla families and residences with hygienic 20-litre water bottle home delivery. Convenient, fast, and dependable.
+                Serving Okhla families and residences with hygienic 20-litre water bottle home delivery. Featuring Bisleri, Alzo, Bailey, and custom brand requests.
               </p>
             </div>
 
@@ -1011,6 +1349,7 @@ export default function App() {
               <ul className="space-y-2 text-sm text-slate-300">
                 <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
                 <li><a href="#about" className="hover:text-white transition-colors">About Us</a></li>
+                <li><a href="#brands" className="hover:text-white transition-colors">Water Brands</a></li>
                 <li><a href="#delivery" className="hover:text-white transition-colors">Water Delivery</a></li>
                 <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
                 <li><a href="#order-form" className="hover:text-white transition-colors">Book Delivery</a></li>
@@ -1166,8 +1505,8 @@ export default function App() {
                     <span className="text-slate-900 font-medium">Okhla, New Delhi</span>
                   </div>
                   <div className="flex justify-between text-slate-600">
-                    <span className="font-semibold">Database Exposure:</span>
-                    <span className="text-emerald-700 font-bold">None (Stateless Client)</span>
+                    <span className="font-semibold">Available Brands:</span>
+                    <span className="text-slate-900 font-medium">Bisleri, Alzo, Bailey, Custom</span>
                   </div>
                 </div>
 
