@@ -211,12 +211,12 @@ export default function App() {
       
       {/* ---------------- 1. STICKY NAVBAR ---------------- */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#0f766e]/15 shadow-xs transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20 gap-4">
             
             {/* Logo / Wordmark */}
-            <a href="#home" className="flex items-center gap-3.5 group">
-              <div className="w-13 h-13 rounded-2xl bg-white p-1 border border-[#0f766e]/20 shadow-xs flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+            <a href="#home" className="flex items-center gap-3 group shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-white p-1 border border-[#0f766e]/20 shadow-xs flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
                 <img 
                   src="/tuba-logo.png" 
                   alt="Tuba Enterprises Logo" 
@@ -228,29 +228,28 @@ export default function App() {
                   Tuba Enterprises
                 </span>
                 <span className="block text-[11px] font-semibold text-[#0f766e] tracking-wider uppercase mt-1">
-                  20L Drinking Water Home Delivery
+                  20L Drinking Water
                 </span>
               </div>
             </a>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-7 text-[15px] font-semibold text-[#334155]">
-              <a href="#home" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Home</a>
-              <a href="#about" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">About Us</a>
-              <a href="#brands" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Water Brands</a>
-              <a href="#delivery" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Water Delivery</a>
-              <a href="#how-it-works" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">How It Works</a>
-              <a href="#order-form" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Book Delivery</a>
-              <a href="#contact" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Contact</a>
+            <nav className="hidden xl:flex items-center gap-6 text-[15px] font-semibold text-[#334155] shrink-0">
+              <a href="#home" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e] whitespace-nowrap">Home</a>
+              <a href="#about" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e] whitespace-nowrap">About Us</a>
+              <a href="#brands" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e] whitespace-nowrap">Water Brands</a>
+              <a href="#delivery" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e] whitespace-nowrap">Delivery</a>
+              <a href="#how-it-works" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e] whitespace-nowrap">How It Works</a>
+              <a href="#contact" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e] whitespace-nowrap">Contact</a>
             </nav>
 
             {/* Right CTAs */}
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-3 shrink-0">
               <a
                 href={WHATSAPP_DIRECT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-xs hover:shadow transition-all duration-200 active:scale-95"
+                className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold text-sm px-3.5 py-2.5 rounded-xl shadow-xs hover:shadow transition-all duration-200 active:scale-95 whitespace-nowrap"
                 title="Chat on WhatsApp"
               >
                 <MessageCircle className="w-4 h-4 fill-white" />
@@ -259,20 +258,20 @@ export default function App() {
 
               <a
                 href="#order-form"
-                className="inline-flex items-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-sm hover:shadow transition-all duration-200 active:scale-95 hover:translate-y-[-1px]"
+                className="inline-flex items-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-semibold text-sm px-4 sm:px-5 py-2.5 rounded-xl shadow-sm hover:shadow transition-all duration-200 active:scale-95 hover:translate-y-[-1px] whitespace-nowrap"
               >
-                <Droplet className="w-4 h-4 fill-white" />
+                <Droplet className="w-4 h-4 fill-white shrink-0" />
                 <span>Book Delivery</span>
               </a>
             </div>
 
-            {/* Mobile Hamburger Button */}
-            <div className="flex md:hidden items-center">
+            {/* Mobile / Tablet Hamburger Button */}
+            <div className="flex lg:hidden items-center">
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Toggle mobile menu"
-                className="p-2 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-slate-100 focus:outline-hidden"
+                className="p-2 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-slate-100 focus:outline-hidden cursor-pointer"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
