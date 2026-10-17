@@ -3,23 +3,22 @@ import {
   Droplet, 
   Phone, 
   MapPin, 
-  Heart, 
-  BookOpen, 
   CheckCircle2, 
-  Copy, 
-  Check, 
   Menu, 
   X, 
   Truck, 
   ShieldCheck, 
-  Users, 
   ExternalLink,
   MessageCircle,
   Clock,
   Lock,
   LogOut,
   AlertTriangle,
-  KeyRound
+  KeyRound,
+  Sparkles,
+  Calendar,
+  Package,
+  Check
 } from 'lucide-react';
 import { 
   sanitizeText, 
@@ -38,7 +37,6 @@ const ADMIN_HASH_KEY = '5a6bc3f7895029bc0b6c68b759600a927fa10c92f15eb1e428a2b531
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [copiedUPI, setCopiedUPI] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [rateLimitError, setRateLimitError] = useState('');
   
@@ -58,17 +56,11 @@ export default function App() {
     message: ''
   });
 
-  const PHONE_NUMBER = "+919643088712";
-  const PHONE_DISPLAY = "+91 9643088712";
-  const UPI_ID = "9866063694";
-  const MADARSA_ADDRESS = "Lane No. 4, Near Nabi Masjid, Johri Farm, Okhla, New Delhi - 110025";
-  const MAPS_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Lane No. 4, Near Nabi Masjid, Johri Farm, Okhla, New Delhi 110025");
-
-  const handleCopyUPI = () => {
-    navigator.clipboard.writeText(UPI_ID);
-    setCopiedUPI(true);
-    setTimeout(() => setCopiedUPI(false), 3000);
-  };
+  const PHONE_NUMBER = "+919866063694";
+  const PHONE_DISPLAY = "+91 9866063694";
+  const SERVICE_LOCATION = "Johri Farm, Okhla, New Delhi - 110025";
+  const MAPS_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Johri Farm, Okhla, New Delhi 110025");
+  const WHATSAPP_DIRECT_URL = "https://wa.me/919866063694?text=" + encodeURIComponent("Hello Tuba Enterprises, I would like to order 20L drinking water bottles.");
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -104,9 +96,9 @@ export default function App() {
     }
 
     // 3. Construct WhatsApp delivery message with sanitized values
-    const messageText = `Assalamu Alaikum / Hello Tuba Enterprises,\n\nI would like to request a 20L water bottle delivery:\n• Name: ${sanitizedName}\n• Phone: ${sanitizedPhone}\n• Address: ${sanitizedAddress}\n• Bottles: ${sanitizedBottles} (20-litre)\n${sanitizedDate ? `• Preferred Date: ${sanitizedDate}\n` : ''}${sanitizedMessage ? `• Note: ${sanitizedMessage}\n` : ''}\nThank you!`;
+    const messageText = `Hello Tuba Enterprises,\n\nI would like to request a 20L water bottle delivery:\n• Name: ${sanitizedName}\n• Phone: ${sanitizedPhone}\n• Address: ${sanitizedAddress}\n• Quantity: ${sanitizedBottles} (20-litre)\n${sanitizedDate ? `• Preferred Date: ${sanitizedDate}\n` : ''}${sanitizedMessage ? `• Note: ${sanitizedMessage}\n` : ''}\nThank you!`;
 
-    const whatsappUrl = `https://wa.me/919643088712?text=${encodeURIComponent(messageText)}`;
+    const whatsappUrl = `https://wa.me/919866063694?text=${encodeURIComponent(messageText)}`;
     
     // Open in secure new tab with noopener, noreferrer
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
@@ -161,7 +153,7 @@ export default function App() {
               <div className="w-13 h-13 rounded-2xl bg-white p-1 border border-[#0f766e]/20 shadow-xs flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
                 <img 
                   src="/tuba-logo.png" 
-                  alt="Tuba Enterprises Official Logo" 
+                  alt="Tuba Enterprises Logo" 
                   className="w-full h-full object-contain rounded-xl" 
                 />
               </div>
@@ -170,29 +162,40 @@ export default function App() {
                   Tuba Enterprises
                 </span>
                 <span className="block text-[11px] font-semibold text-[#0f766e] tracking-wider uppercase mt-1">
-                  Serving Water • Educating Futures
+                  20L Drinking Water Home Delivery
                 </span>
               </div>
             </a>
 
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center gap-7 text-[15px] font-semibold text-[#334155]">
-              <a href="#home" className="hover:text-[#0f766e] transition-colors">Home</a>
-              <a href="#about" className="hover:text-[#0f766e] transition-colors">About</a>
-              <a href="#delivery" className="hover:text-[#0f766e] transition-colors">Water Delivery</a>
-              <a href="#madarsa" className="hover:text-[#0f766e] transition-colors">Madarsa</a>
-              <a href="#donation" className="hover:text-[#0f766e] transition-colors">Donation</a>
-              <a href="#contact" className="hover:text-[#0f766e] transition-colors">Contact</a>
+              <a href="#home" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Home</a>
+              <a href="#about" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">About Us</a>
+              <a href="#delivery" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Water Delivery</a>
+              <a href="#how-it-works" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">How It Works</a>
+              <a href="#order-form" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Book Delivery</a>
+              <a href="#contact" className="hover:text-[#0f766e] transition-colors py-1 hover:border-b-2 hover:border-[#0f766e]">Contact</a>
             </nav>
 
-            {/* Right CTA */}
+            {/* Right CTAs */}
             <div className="hidden md:flex items-center gap-3">
               <a
+                href={WHATSAPP_DIRECT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-xs hover:shadow transition-all duration-200 active:scale-95"
+                title="Chat on WhatsApp"
+              >
+                <MessageCircle className="w-4 h-4 fill-white" />
+                <span>WhatsApp</span>
+              </a>
+
+              <a
                 href="#order-form"
-                className="inline-flex items-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-sm hover:shadow transition-all active:scale-95"
+                className="inline-flex items-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-sm hover:shadow transition-all duration-200 active:scale-95 hover:translate-y-[-1px]"
               >
                 <Droplet className="w-4 h-4 fill-white" />
-                <span>Order Water</span>
+                <span>Book Delivery</span>
               </a>
             </div>
 
@@ -226,7 +229,7 @@ export default function App() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3 py-2 rounded-md hover:bg-slate-50 hover:text-[#0f766e]"
               >
-                About
+                About Us
               </a>
               <a 
                 href="#delivery" 
@@ -236,18 +239,18 @@ export default function App() {
                 Water Delivery
               </a>
               <a 
-                href="#madarsa" 
+                href="#how-it-works" 
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3 py-2 rounded-md hover:bg-slate-50 hover:text-[#0f766e]"
               >
-                Madarsa
+                How It Works
               </a>
               <a 
-                href="#donation" 
+                href="#order-form" 
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3 py-2 rounded-md hover:bg-slate-50 hover:text-[#0f766e]"
               >
-                Donation
+                Book Water Delivery
               </a>
               <a 
                 href="#contact" 
@@ -265,7 +268,16 @@ export default function App() {
                 className="w-full inline-flex items-center justify-center gap-2 bg-[#0f766e] text-white font-semibold text-center py-3 rounded-xl shadow-sm"
               >
                 <Droplet className="w-4 h-4 fill-white" />
-                Order Water
+                Book Water Delivery
+              </a>
+              <a
+                href={WHATSAPP_DIRECT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full inline-flex items-center justify-center gap-2 bg-[#25D366] text-white font-semibold text-center py-3 rounded-xl shadow-sm"
+              >
+                <MessageCircle className="w-4 h-4 fill-white" />
+                Order via WhatsApp
               </a>
               <a
                 href={`tel:${PHONE_NUMBER}`}
@@ -288,8 +300,8 @@ export default function App() {
             <div className="lg:col-span-7 text-left space-y-6">
               
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f0fdfa] border border-[#0f766e]/30 text-[#0f766e] text-xs sm:text-sm font-semibold tracking-wide shadow-2xs">
-                <span className="w-2 h-2 rounded-full bg-[#65a30d] animate-pulse"></span>
-                <span>Okhla Community Initiative • New Delhi</span>
+                <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse"></span>
+                <span>Fast & Reliable Home Delivery • Okhla, New Delhi</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#1e293b] font-['Outfit'] leading-[1.14]">
@@ -300,25 +312,35 @@ export default function App() {
               </h1>
 
               <p className="text-lg sm:text-xl text-slate-600 leading-relaxed max-w-2xl font-normal">
-                Reliable 20-litre water bottle delivery in Okhla, New Delhi — helping serve local families while supporting the education and welfare of 19 madrasa students.
+                Reliable 20-litre drinking-water bottle delivery serving homes, apartments, and families across Okhla. Hygienic jars, prompt door-to-door delivery, and effortless phone or WhatsApp ordering.
               </p>
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
                 <a
-                  href="#delivery"
-                  className="inline-flex items-center justify-center gap-2.5 bg-[#0f766e] hover:bg-[#115e59] text-white font-semibold text-base px-7 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-98"
+                  href="#order-form"
+                  className="inline-flex items-center justify-center gap-2.5 bg-[#0f766e] hover:bg-[#115e59] text-white font-semibold text-base px-7 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 active:scale-98 hover:translate-y-[-2px]"
                 >
                   <Droplet className="w-5 h-5 fill-white" />
-                  <span>Order Water</span>
+                  <span>Book Water Delivery</span>
+                </a>
+
+                <a
+                  href={WHATSAPP_DIRECT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold text-base px-6 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 active:scale-98 hover:translate-y-[-2px]"
+                >
+                  <MessageCircle className="w-5 h-5 fill-white" />
+                  <span>WhatsApp Us</span>
                 </a>
                 
                 <a
-                  href="#madarsa"
-                  className="inline-flex items-center justify-center gap-2.5 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold text-base px-6 py-3.5 rounded-xl shadow-2xs hover:shadow-xs transition-all active:scale-98"
+                  href={`tel:${PHONE_NUMBER}`}
+                  className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold text-base px-6 py-3.5 rounded-xl shadow-2xs hover:shadow-xs transition-all active:scale-98 hover:border-[#0f766e]"
                 >
-                  <Heart className="w-5 h-5 text-[#65a30d]" />
-                  <span>Support the Madarsa</span>
+                  <Phone className="w-5 h-5 text-[#0f766e]" />
+                  <span>Call {PHONE_DISPLAY}</span>
                 </a>
               </div>
 
@@ -327,17 +349,17 @@ export default function App() {
                 <p className="text-sm font-medium text-slate-600 flex flex-wrap items-center gap-y-2 gap-x-4">
                   <span className="inline-flex items-center gap-1.5 text-slate-800 font-semibold">
                     <CheckCircle2 className="w-4 h-4 text-[#0f766e]" />
-                    20L Home Delivery
+                    20L Sanitized Bottles
                   </span>
                   <span className="text-slate-300 hidden sm:inline">•</span>
                   <span className="inline-flex items-center gap-1.5 text-slate-800 font-semibold">
                     <CheckCircle2 className="w-4 h-4 text-[#0f766e]" />
-                    Local Service
+                    Direct Doorstep Delivery
                   </span>
                   <span className="text-slate-300 hidden sm:inline">•</span>
                   <span className="inline-flex items-center gap-1.5 text-slate-800 font-semibold">
-                    <CheckCircle2 className="w-4 h-4 text-[#65a30d]" />
-                    Community Supported
+                    <CheckCircle2 className="w-4 h-4 text-[#15803d]" />
+                    Local Okhla Service
                   </span>
                 </p>
               </div>
@@ -351,12 +373,12 @@ export default function App() {
                 {/* Decorative background glow with brand teal & olive */}
                 <div className="absolute -inset-4 bg-gradient-to-tr from-[#ccfbf1]/60 to-[#ecfccb]/60 rounded-3xl blur-2xl -z-10 transform rotate-1"></div>
                 
-                <div className="bg-white p-3 sm:p-4 rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden relative">
-                  <div className="aspect-square rounded-2xl overflow-hidden bg-slate-50 relative group">
+                <div className="bg-white p-3 sm:p-4 rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden relative group hover:shadow-2xl transition-all duration-300">
+                  <div className="aspect-square rounded-2xl overflow-hidden bg-slate-50 relative">
                     <img 
                       src="/water-bottle-20l.jpg" 
-                      alt="Tuba Enterprises 20L Pure Water Bottle" 
-                      className="w-full h-full object-cover transform group-hover:scale-102 transition-transform duration-500"
+                      alt="Tuba Enterprises 20L Pure Drinking Water Bottle" 
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
 
                     {/* Logo Watermark Badge on Top Right */}
@@ -394,59 +416,59 @@ export default function App() {
           
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
             <span className="text-xs font-bold tracking-widest text-[#0f766e] uppercase bg-[#f0fdfa] px-3.5 py-1 rounded-full border border-[#0f766e]/20">
-              Our Story & Purpose
+              Reliable Local Service
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1e293b] font-['Outfit']">
-              More Than a Water Delivery Service
+              About Tuba Enterprises
             </h2>
             <div className="w-16 h-1 bg-[#0f766e] mx-auto rounded-full"></div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
             <div className="space-y-6 text-slate-600 text-base sm:text-lg leading-relaxed">
-              <p className="font-medium text-slate-800">
-                Tuba Enterprises is a small local water-delivery initiative serving families in and around Okhla. Customers can order 20-litre drinking-water bottles for convenient home delivery.
+              <p className="font-medium text-slate-800 text-xl leading-relaxed">
+                Tuba Enterprises is a dedicated local drinking-water delivery initiative based in Okhla, New Delhi.
               </p>
               <p>
-                What makes Tuba Enterprises different is where the work leads. The income generated through the business helps support Madarsa Darululoom Siddiquia and the welfare and education of its 19 students.
+                We specialize in delivering standard 20-litre drinking-water bottles directly to homes, residential apartments, and local shops. Our focus is on providing reliable, timely service with clean, safe drinking water you can count on daily.
               </p>
-              <p className="text-slate-600 text-sm italic border-l-3 border-[#65a30d] pl-4 py-1.5 bg-[#f7fee7]/40 rounded-r-lg">
-                Every bottle ordered helps keep clean drinking water on local dining tables while contributing honestly toward shelter, books, and daily meals for children learning under community care.
+              <p className="text-slate-700 text-sm border-l-3 border-[#0f766e] pl-4 py-2 bg-[#f0fdfa] rounded-r-lg">
+                Ordering water is straightforward: simply call us or send a quick message on WhatsApp, and our delivery person will deliver your 20-litre bottle right to your doorstep.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               
-              {/* Card 1: Water Delivery */}
-              <div className="bg-[#fbfbf9] hover:bg-[#f0fdfa] p-6 rounded-2xl border border-slate-200 hover:border-[#0f766e]/30 transition-all text-center flex flex-col items-center">
+              {/* Card 1: Pure 20L Water */}
+              <div className="bg-[#fbfbf9] hover:bg-[#f0fdfa] p-6 rounded-2xl border border-slate-200 hover:border-[#0f766e]/30 transition-all duration-300 hover:translate-y-[-4px] text-center flex flex-col items-center shadow-2xs hover:shadow-md">
                 <div className="w-12 h-12 rounded-xl bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center mb-4">
                   <Droplet className="w-6 h-6 fill-[#0f766e]" />
                 </div>
-                <h3 className="font-bold text-slate-900 text-base mb-1 font-['Outfit']">Water Delivery</h3>
+                <h3 className="font-bold text-slate-900 text-base mb-1 font-['Outfit']">Pure Water</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  20-litre drinking water bottles brought right to your doorstep in Okhla.
+                  Hygienically packaged 20-litre bottles for safe, healthy drinking.
                 </p>
               </div>
 
-              {/* Card 2: Community Support */}
-              <div className="bg-[#fbfbf9] hover:bg-[#f7fee7] p-6 rounded-2xl border border-slate-200 hover:border-[#65a30d]/30 transition-all text-center flex flex-col items-center">
-                <div className="w-12 h-12 rounded-xl bg-[#ecfccb] text-[#65a30d] flex items-center justify-center mb-4">
-                  <Users className="w-6 h-6" />
+              {/* Card 2: Doorstep Delivery */}
+              <div className="bg-[#fbfbf9] hover:bg-[#f0fdfa] p-6 rounded-2xl border border-slate-200 hover:border-[#0f766e]/30 transition-all duration-300 hover:translate-y-[-4px] text-center flex flex-col items-center shadow-2xs hover:shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center mb-4">
+                  <Truck className="w-6 h-6" />
                 </div>
-                <h3 className="font-bold text-slate-900 text-base mb-1 font-['Outfit']">Community Support</h3>
+                <h3 className="font-bold text-slate-900 text-base mb-1 font-['Outfit']">Doorstep Delivery</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  A homegrown initiative built with neighbors, families, and trust.
+                  Delivered right up to your home entrance with dependable local routes.
                 </p>
               </div>
 
-              {/* Card 3: Education */}
-              <div className="bg-[#fbfbf9] hover:bg-[#fffbeb] p-6 rounded-2xl border border-slate-200 hover:border-amber-200 transition-all text-center flex flex-col items-center">
-                <div className="w-12 h-12 rounded-xl bg-[#fef3c7] text-[#d97706] flex items-center justify-center mb-4">
-                  <BookOpen className="w-6 h-6" />
+              {/* Card 3: Instant Ordering */}
+              <div className="bg-[#fbfbf9] hover:bg-[#f0fdfa] p-6 rounded-2xl border border-slate-200 hover:border-[#0f766e]/30 transition-all duration-300 hover:translate-y-[-4px] text-center flex flex-col items-center shadow-2xs hover:shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center mb-4">
+                  <Phone className="w-6 h-6" />
                 </div>
-                <h3 className="font-bold text-slate-900 text-base mb-1 font-['Outfit']">Education</h3>
+                <h3 className="font-bold text-slate-900 text-base mb-1 font-['Outfit']">Easy Ordering</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Providing food, daily needs, and learning for 19 dedicated students.
+                  Fast ordering via direct phone call or 1-tap WhatsApp message.
                 </p>
               </div>
 
@@ -473,7 +495,7 @@ export default function App() {
             <div className="w-16 h-1 bg-[#0f766e] mx-auto rounded-full"></div>
           </div>
 
-          <div className="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden">
+          <div className="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden hover:shadow-xl transition-all duration-300">
             <div className="grid grid-cols-1 md:grid-cols-12 items-center">
               
               {/* Product Visual */}
@@ -482,7 +504,7 @@ export default function App() {
                   <img 
                     src="/water-bottle-20l.jpg" 
                     alt="20-Litre Water Bottle Home Delivery" 
-                    className="w-full h-auto rounded-2xl shadow-sm object-cover"
+                    className="w-full h-auto rounded-2xl shadow-sm object-cover group-hover:scale-103 transition-transform duration-300"
                   />
                   <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs text-[#1e293b] text-xs font-bold px-2.5 py-1 rounded-md border border-slate-200 shadow-2xs">
                     20L Jar
@@ -503,28 +525,28 @@ export default function App() {
 
                 {/* Features List */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200">
+                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
                     <div className="w-8 h-8 rounded-lg bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center shrink-0">
                       <Droplet className="w-4 h-4 fill-[#0f766e]" />
                     </div>
                     <span className="text-sm font-semibold text-slate-800">20-litre water bottles</span>
                   </div>
 
-                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200">
+                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
                     <div className="w-8 h-8 rounded-lg bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center shrink-0">
                       <Truck className="w-4 h-4" />
                     </div>
                     <span className="text-sm font-semibold text-slate-800">Home delivery</span>
                   </div>
 
-                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200">
+                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
                     <div className="w-8 h-8 rounded-lg bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center shrink-0">
                       <MapPin className="w-4 h-4" />
                     </div>
                     <span className="text-sm font-semibold text-slate-800">Local Okhla service</span>
                   </div>
 
-                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200">
+                  <div className="flex items-center gap-3 bg-[#fbfbf9] p-3 rounded-xl border border-slate-200 hover:border-[#0f766e]/40 transition-colors">
                     <div className="w-8 h-8 rounded-lg bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center shrink-0">
                       <Phone className="w-4 h-4" />
                     </div>
@@ -544,25 +566,33 @@ export default function App() {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
                   <a
                     href={`tel:${PHONE_NUMBER}`}
-                    className="inline-flex items-center justify-center gap-2.5 bg-[#0f766e] hover:bg-[#115e59] text-white font-semibold text-base px-6 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all"
+                    className="inline-flex items-center justify-center gap-2.5 bg-[#0f766e] hover:bg-[#115e59] text-white font-semibold text-base px-6 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all hover:translate-y-[-2px]"
                   >
                     <Phone className="w-5 h-5" />
                     <span>Order a 20L Bottle</span>
                   </a>
 
                   <a
-                    href={`https://wa.me/919643088712?text=${encodeURIComponent("Assalamu Alaikum / Hello, I would like to order a 20L water bottle delivery.")}`}
+                    href={WHATSAPP_DIRECT_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 bg-[#16a34a] hover:bg-[#15803d] text-white font-semibold text-base px-5 py-3.5 rounded-xl shadow-sm hover:shadow transition-all"
+                    className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold text-base px-5 py-3.5 rounded-xl shadow-sm hover:shadow transition-all hover:translate-y-[-2px]"
                   >
-                    <MessageCircle className="w-5 h-5" />
+                    <MessageCircle className="w-5 h-5 fill-white" />
                     <span>WhatsApp Order</span>
+                  </a>
+
+                  <a
+                    href="#order-form"
+                    className="inline-flex items-center justify-center gap-2 bg-[#1e293b] hover:bg-slate-800 text-white font-semibold text-base px-5 py-3.5 rounded-xl shadow-sm hover:shadow transition-all hover:translate-y-[-2px]"
+                  >
+                    <Droplet className="w-4 h-4 fill-white" />
+                    <span>Book Delivery</span>
                   </a>
                 </div>
 
                 <div className="text-sm text-slate-500 font-medium">
-                  Or call directly: <a href={`tel:${PHONE_NUMBER}`} className="text-slate-900 font-bold hover:underline">{PHONE_DISPLAY}</a>
+                  Or call directly: <a href={`tel:${PHONE_NUMBER}`} className="text-slate-900 font-bold hover:underline hover:text-[#0f766e]">{PHONE_DISPLAY}</a>
                 </div>
 
               </div>
@@ -573,12 +603,12 @@ export default function App() {
       </section>
 
       {/* ---------------- 5. HOW IT WORKS ---------------- */}
-      <section className="py-20 bg-white border-y border-slate-200">
+      <section id="how-it-works" className="py-20 bg-white border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
             <span className="text-xs font-bold tracking-widest text-slate-500 uppercase bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
-              Simple Process
+              Simple 3-Step Process
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1e293b] font-['Outfit']">
               How It Works
@@ -589,7 +619,7 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
             {/* Step 1 */}
-            <div className="relative bg-[#fbfbf9] rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all flex flex-col justify-between">
+            <div className="relative bg-[#fbfbf9] rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all duration-300 hover:translate-y-[-4px] flex flex-col justify-between shadow-2xs hover:shadow-md">
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <span className="text-3xl font-extrabold text-[#0f766e] font-['Outfit']">01</span>
@@ -601,16 +631,16 @@ export default function App() {
                   Place Your Order
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Call Tuba Enterprises at <a href={`tel:${PHONE_NUMBER}`} className="font-semibold text-[#0f766e] hover:underline">{PHONE_DISPLAY}</a> or fill out our quick request form.
+                  Call Tuba Enterprises at <a href={`tel:${PHONE_NUMBER}`} className="font-semibold text-[#0f766e] hover:underline">{PHONE_DISPLAY}</a> or fill out our online delivery booking form.
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-slate-200/80 text-xs font-medium text-slate-500 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-[#0f766e]" /> Direct phone confirmation
+                <Clock className="w-3.5 h-3.5 text-[#0f766e]" /> Quick direct confirmation
               </div>
             </div>
 
             {/* Step 2 */}
-            <div className="relative bg-[#fbfbf9] rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all flex flex-col justify-between">
+            <div className="relative bg-[#fbfbf9] rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all duration-300 hover:translate-y-[-4px] flex flex-col justify-between shadow-2xs hover:shadow-md">
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <span className="text-3xl font-extrabold text-[#0f766e] font-['Outfit']">02</span>
@@ -622,7 +652,7 @@ export default function App() {
                   We Deliver
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Your 20-litre water bottle is delivered to your home promptly across the local Okhla neighborhood.
+                  Your 20-litre water bottle is dispatched promptly and delivered directly to your doorstep in Okhla.
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-slate-200/80 text-xs font-medium text-slate-500 flex items-center gap-1.5">
@@ -631,23 +661,23 @@ export default function App() {
             </div>
 
             {/* Step 3 */}
-            <div className="relative bg-[#fbfbf9] rounded-2xl p-8 border border-slate-200 hover:border-[#65a30d]/40 transition-all flex flex-col justify-between">
+            <div className="relative bg-[#fbfbf9] rounded-2xl p-8 border border-slate-200 hover:border-[#0f766e]/40 transition-all duration-300 hover:translate-y-[-4px] flex flex-col justify-between shadow-2xs hover:shadow-md">
               <div>
                 <div className="flex items-center justify-between mb-6">
-                  <span className="text-3xl font-extrabold text-[#65a30d] font-['Outfit']">03</span>
-                  <div className="w-12 h-12 rounded-xl bg-[#ecfccb] text-[#65a30d] flex items-center justify-center">
-                    <Heart className="w-6 h-6 text-[#65a30d]" />
+                  <span className="text-3xl font-extrabold text-[#0f766e] font-['Outfit']">03</span>
+                  <div className="w-12 h-12 rounded-xl bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center">
+                    <Droplet className="w-6 h-6 fill-[#0f766e]" />
                   </div>
                 </div>
                 <h3 className="text-xl font-bold text-[#1e293b] mb-2 font-['Outfit']">
-                  Your Order Helps
+                  Enjoy Clean Water
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  The business also contributes toward supporting the madrasa and its students.
+                  Enjoy fresh, safe drinking water daily with regular refilling whenever you need a replacement bottle.
                 </p>
               </div>
-              <div className="mt-6 pt-4 border-t border-slate-200/80 text-xs font-medium text-[#65a30d] flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-[#65a30d]" /> Supporting 19 madrasa students
+              <div className="mt-6 pt-4 border-t border-slate-200/80 text-xs font-medium text-[#0f766e] flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5 text-[#0f766e]" /> Reliable refill schedule
               </div>
             </div>
 
@@ -656,228 +686,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* ---------------- 6. MADARSA SECTION ---------------- */}
-      <section id="madarsa" className="py-20 bg-[#fbfbf9]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
-            <span className="text-xs font-bold tracking-widest text-[#65a30d] uppercase bg-[#f7fee7] px-3.5 py-1 rounded-full border border-[#65a30d]/30">
-              Community Education
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1e293b] font-['Outfit']">
-              Madarsa Darululoom Siddiquia
-            </h2>
-            <div className="w-16 h-1 bg-[#65a30d] mx-auto rounded-full"></div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            {/* Visual of Madrasa study environment */}
-            <div className="lg:col-span-5">
-              <div className="relative">
-                <div className="bg-white p-3 rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
-                  <img 
-                    src="/madrasa-learning.jpg" 
-                    alt="Students studying at Madarsa Darululoom Siddiquia" 
-                    className="w-full h-80 sm:h-96 object-cover rounded-2xl"
-                  />
-                  <div className="mt-3 p-3 bg-[#f7fee7] rounded-xl border border-[#65a30d]/20 flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#65a30d] text-white flex items-center justify-center font-bold text-sm">
-                        19
-                      </div>
-                      <span className="text-xs font-bold text-[#365314] uppercase tracking-wide">
-                        Students Under Community Care
-                      </span>
-                    </div>
-                    <span className="text-xs text-[#4d7c0f] font-semibold">Self-Funded</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Content & Address */}
-            <div className="lg:col-span-7 space-y-6">
-              
-              <div className="space-y-4 text-slate-600 text-base sm:text-lg leading-relaxed">
-                <p className="text-slate-900 font-medium text-lg sm:text-xl">
-                  Alongside the water-delivery business, Tuba Enterprises supports a self-funded madrasa serving 19 students. The income generated through the business helps contribute toward their education and welfare.
-                </p>
-                <p>
-                  Every student is given a safe, dignified environment focused on learning, character building, daily nourishment, and steady progress.
-                </p>
-              </div>
-
-              {/* Dignified Highlights */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs">
-                  <div className="text-2xl font-bold text-[#1e293b] font-['Outfit'] mb-1">19 Students</div>
-                  <p className="text-xs text-slate-600">Receiving regular education, living support, and care.</p>
-                </div>
-                <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs">
-                  <div className="text-2xl font-bold text-[#65a30d] font-['Outfit'] mb-1">Self-Funded</div>
-                  <p className="text-xs text-slate-600">Maintained through community water sales and honest support.</p>
-                </div>
-              </div>
-
-              {/* Address Box */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 space-y-4 shadow-2xs">
-                <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-[#f0fdfa] text-[#0f766e] flex items-center justify-center shrink-0 mt-0.5">
-                    <MapPin className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-[#1e293b] text-sm">Madarsa Address</h4>
-                    <p className="text-sm text-slate-600 mt-1 leading-relaxed">
-                      Lane No. 4, Near Nabi Masjid, Johri Farm, Okhla, New Delhi - 110025
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-2">
-                  <a
-                    href={MAPS_SEARCH_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-[#1e293b] hover:bg-slate-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-xs transition-colors"
-                  >
-                    <span>Get Directions</span>
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ---------------- 7. ABOUT MUFTI MOHD. SADIQUE HUSSAIN ---------------- */}
-      <section className="py-16 bg-white border-y border-slate-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="bg-[#fbfbf9] rounded-3xl border border-slate-200 p-6 sm:p-8">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
-              
-              {/* Profile Avatar Icon representation */}
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-white border-2 border-[#0f766e]/30 flex items-center justify-center shrink-0 text-slate-500 overflow-hidden shadow-xs">
-                <div className="flex flex-col items-center justify-center p-2 text-center">
-                  <Users className="w-10 h-10 text-[#0f766e] mb-1" />
-                  <span className="text-[10px] font-bold text-[#0f766e] uppercase tracking-tighter">Educator</span>
-                </div>
-              </div>
-
-              {/* Profile Details */}
-              <div className="space-y-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#0f766e] bg-[#f0fdfa] px-2.5 py-0.5 rounded-md border border-[#0f766e]/20">
-                  Leadership
-                </span>
-                <h3 className="text-2xl font-bold text-[#1e293b] font-['Outfit']">
-                  Mufti Mohd. Sadique Hussain
-                </h3>
-                <p className="text-sm font-semibold text-slate-700">
-                  Madarsa Darululoom Siddiquia
-                </p>
-                <p className="text-sm text-slate-600 leading-relaxed max-w-xl pt-1">
-                  He runs Madarsa Darululoom Siddiquia, overseeing the education and welfare of the 19 students in Johri Farm, Okhla.
-                </p>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ---------------- 8. DONATION SECTION ---------------- */}
-      <section id="donation" className="py-20 bg-gradient-to-b from-[#fbfbf9] to-[#f0fdfa]/50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="max-w-3xl mx-auto text-center space-y-4 mb-12">
-            <span className="text-xs font-bold tracking-widest text-[#0f766e] uppercase bg-[#f0fdfa] px-3.5 py-1 rounded-full border border-[#0f766e]/20">
-              Direct Contribution
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1e293b] font-['Outfit']">
-              Support the Students
-            </h2>
-            <p className="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto">
-              If you would like to contribute directly toward the education and welfare of the madrasa students, you can support Madarsa Darululoom Siddiquia through the UPI ID below.
-            </p>
-            <div className="w-16 h-1 bg-[#0f766e] mx-auto rounded-full"></div>
-          </div>
-
-          <div className="bg-white rounded-3xl border border-[#0f766e]/25 shadow-xl p-6 sm:p-10 space-y-8">
-            
-            {/* UPI ID Presentation Box */}
-            <div className="bg-[#1e293b] rounded-2xl p-6 sm:p-8 text-white text-center space-y-4 relative overflow-hidden">
-              <div className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-[#5eead4]">
-                UPI ID for Madarsa Support
-              </div>
-              
-              <div className="text-3xl sm:text-4xl md:text-5xl font-mono font-extrabold tracking-wider text-white select-all">
-                {UPI_ID}
-              </div>
-
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={handleCopyUPI}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#2dd4bf] hover:bg-[#14b8a6] text-[#042f2e] font-bold px-6 py-3 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer"
-                >
-                  {copiedUPI ? (
-                    <>
-                      <Check className="w-5 h-5 text-[#042f2e]" />
-                      <span>UPI ID copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-5 h-5 text-[#042f2e]" />
-                      <span>Copy UPI ID</span>
-                    </>
-                  )}
-                </button>
-
-                {/* Direct UPI Intent Link for mobile phones */}
-                <a
-                  href={`upi://pay?pa=${UPI_ID}&pn=Madarsa%20Darululoom%20Siddiquia&cu=INR`}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-medium px-5 py-3 rounded-xl border border-slate-700 transition-colors text-sm"
-                >
-                  <span>Donate via UPI App</span>
-                </a>
-              </div>
-
-              {copiedUPI && (
-                <div className="text-xs text-[#5eead4] font-semibold animate-fade-in">
-                  ✓ Copied {UPI_ID} to clipboard. You can now paste it into GPay, PhonePe, Paytm, or BHIM.
-                </div>
-              )}
-            </div>
-
-            {/* Direct Contact Notice */}
-            <div className="text-center pt-2">
-              <p className="text-sm text-slate-600 font-medium">
-                For donation-related questions, please contact us directly.
-              </p>
-              <div className="mt-3 flex justify-center">
-                <a
-                  href={`tel:${PHONE_NUMBER}`}
-                  className="inline-flex items-center gap-2 text-[#0f766e] font-bold hover:underline text-sm"
-                >
-                  <Phone className="w-4 h-4" />
-                  <span>Call {PHONE_DISPLAY}</span>
-                </a>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ---------------- 9. WATER DELIVERY CONTACT FORM (SECURE & SANITIZED) ---------------- */}
-      <section id="order-form" className="py-20 bg-white border-y border-slate-200">
+      {/* ---------------- 6. WATER DELIVERY CONTACT & BOOKING FORM ---------------- */}
+      <section id="order-form" className="py-20 bg-[#fbfbf9] border-y border-slate-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center space-y-4 mb-12">
@@ -893,7 +703,7 @@ export default function App() {
             <div className="w-16 h-1 bg-[#0f766e] mx-auto rounded-full"></div>
           </div>
 
-          <div className="bg-[#fbfbf9] rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-md">
             
             {/* Rate limit warning banner */}
             {rateLimitError && (
@@ -912,13 +722,22 @@ export default function App() {
                 <p className="text-slate-600 max-w-md mx-auto text-sm">
                   Your order details were sanitized and prepared. If WhatsApp didn't open automatically, you can call us directly:
                 </p>
-                <div className="pt-2">
+                <div className="pt-2 flex flex-col sm:flex-row justify-center gap-3">
                   <a
                     href={`tel:${PHONE_NUMBER}`}
-                    className="inline-flex items-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold px-6 py-3 rounded-xl shadow-md"
+                    className="inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold px-6 py-3 rounded-xl shadow-md transition-colors"
                   >
                     <Phone className="w-4 h-4" />
                     <span>Call {PHONE_DISPLAY}</span>
+                  </a>
+                  <a
+                    href={WHATSAPP_DIRECT_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold px-6 py-3 rounded-xl shadow-md transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4 fill-white" />
+                    <span>Open WhatsApp</span>
                   </a>
                 </div>
                 <div className="pt-4">
@@ -928,7 +747,7 @@ export default function App() {
                       setFormSubmitted(false);
                       setRateLimitError('');
                     }}
-                    className="text-xs text-slate-500 hover:text-slate-800 underline"
+                    className="text-xs text-slate-500 hover:text-slate-800 underline cursor-pointer"
                   >
                     Edit form details
                   </button>
@@ -952,8 +771,8 @@ export default function App() {
                       autoComplete="name"
                       value={formData.fullName}
                       onChange={handleFormChange}
-                      placeholder="e.g. Mohd. Farhan"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm"
+                      placeholder="e.g. Farhan Khan"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm transition-colors"
                     />
                   </div>
 
@@ -971,8 +790,8 @@ export default function App() {
                       autoComplete="tel"
                       value={formData.phone}
                       onChange={handleFormChange}
-                      placeholder="e.g. 9876543210"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm"
+                      placeholder="e.g. 9866063694"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm transition-colors"
                     />
                   </div>
                 </div>
@@ -980,7 +799,7 @@ export default function App() {
                 {/* Delivery Address */}
                 <div className="space-y-1.5 text-left">
                   <label htmlFor="address" className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Address *
+                    Address in Okhla *
                   </label>
                   <textarea
                     id="address"
@@ -991,8 +810,8 @@ export default function App() {
                     autoComplete="street-address"
                     value={formData.address}
                     onChange={handleFormChange}
-                    placeholder="House/Flat No., Lane No., Landmark, Johri Farm / Okhla"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm resize-none"
+                    placeholder="House/Flat No., Lane No., Landmark, Johri Farm / Okhla, New Delhi"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm resize-none transition-colors"
                   ></textarea>
                 </div>
 
@@ -1008,13 +827,13 @@ export default function App() {
                       required
                       value={formData.bottles}
                       onChange={handleFormChange}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm transition-colors"
                     >
                       <option value="1">1 Bottle (20 Litre)</option>
                       <option value="2">2 Bottles (20 Litre each)</option>
                       <option value="3">3 Bottles (20 Litre each)</option>
                       <option value="4">4 Bottles (20 Litre each)</option>
-                      <option value="5+">5+ Bottles (Call for bulk)</option>
+                      <option value="5+">5+ Bottles (Bulk)</option>
                     </select>
                   </div>
 
@@ -1029,7 +848,7 @@ export default function App() {
                       name="preferredDate"
                       value={formData.preferredDate}
                       onChange={handleFormChange}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm transition-colors"
                     />
                   </div>
                 </div>
@@ -1037,7 +856,7 @@ export default function App() {
                 {/* Additional Message */}
                 <div className="space-y-1.5 text-left">
                   <label htmlFor="message" className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Additional Message
+                    Additional Instructions (Optional)
                   </label>
                   <input
                     type="text"
@@ -1046,21 +865,21 @@ export default function App() {
                     maxLength={250}
                     value={formData.message}
                     onChange={handleFormChange}
-                    placeholder="e.g. Ring the bell on 2nd floor, or deliver in the morning"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm"
+                    placeholder="e.g. Ring bell on 2nd floor, or deliver before noon"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-[#fbfbf9] text-slate-900 text-sm transition-colors"
                   />
                 </div>
 
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold text-base py-4 rounded-xl shadow-md transition-all cursor-pointer"
+                    className="w-full inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold text-base py-4 rounded-xl shadow-md transition-all duration-200 cursor-pointer hover:shadow-lg hover:translate-y-[-2px] active:scale-99"
                   >
                     <Droplet className="w-5 h-5 fill-white" />
-                    <span>Request Water Delivery</span>
+                    <span>Book Water Delivery</span>
                   </button>
                   <p className="text-[12px] text-slate-500 text-center mt-2">
-                    Orders are processed directly via phone/WhatsApp confirmation. Rate-limited & XSS-protected.
+                    Orders are processed directly via phone or WhatsApp confirmation.
                   </p>
                 </div>
 
@@ -1072,8 +891,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* ---------------- 10. CONTACT SECTION ---------------- */}
-      <section id="contact" className="py-20 bg-[#fbfbf9]">
+      {/* ---------------- 7. CONTACT SECTION ---------------- */}
+      <section id="contact" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
@@ -1088,44 +907,54 @@ export default function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             
-            {/* Phone Card */}
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xs flex flex-col justify-between space-y-6">
-              <div className="space-y-3">
+            {/* Phone & WhatsApp Card */}
+            <div className="bg-[#fbfbf9] rounded-3xl p-8 border border-slate-200 shadow-xs flex flex-col justify-between space-y-6 hover:shadow-md transition-shadow">
+              <div className="space-y-3 text-left">
                 <div className="w-12 h-12 rounded-xl bg-[#f0fdfa] text-[#0f766e] flex items-center justify-center">
                   <Phone className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-[#1e293b] font-['Outfit']">Phone Ordering</h3>
+                <h3 className="text-xl font-bold text-[#1e293b] font-['Outfit']">Phone & WhatsApp Orders</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Call us directly to request 20-litre water bottle delivery or for any queries about our service.
+                  Call or WhatsApp us directly to schedule your 20-litre water bottle delivery or ask about our local route timings.
                 </p>
                 <div className="text-2xl font-mono font-bold text-slate-900 pt-1">
                   {PHONE_DISPLAY}
                 </div>
               </div>
 
-              <div>
+              <div className="flex flex-col sm:flex-row gap-3">
                 <a
                   href={`tel:${PHONE_NUMBER}`}
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold py-3.5 rounded-xl shadow-xs transition-colors"
+                  className="flex-1 inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold py-3.5 rounded-xl shadow-xs transition-colors"
                 >
                   <Phone className="w-4 h-4" />
                   <span>Call Now</span>
+                </a>
+
+                <a
+                  href={WHATSAPP_DIRECT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-3.5 rounded-xl shadow-xs transition-colors"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <span>WhatsApp</span>
                 </a>
               </div>
             </div>
 
             {/* Address Card */}
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xs flex flex-col justify-between space-y-6">
-              <div className="space-y-3">
-                <div className="w-12 h-12 rounded-xl bg-[#f7fee7] text-[#65a30d] flex items-center justify-center">
+            <div className="bg-[#fbfbf9] rounded-3xl p-8 border border-slate-200 shadow-xs flex flex-col justify-between space-y-6 hover:shadow-md transition-shadow">
+              <div className="space-y-3 text-left">
+                <div className="w-12 h-12 rounded-xl bg-[#ccfbf1] text-[#0f766e] flex items-center justify-center">
                   <MapPin className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-[#1e293b] font-['Outfit']">Madarsa Address</h3>
+                <h3 className="text-xl font-bold text-[#1e293b] font-['Outfit']">Service Location</h3>
                 <div className="text-slate-700 text-sm leading-relaxed font-medium">
-                  {MADARSA_ADDRESS}
+                  {SERVICE_LOCATION}
                 </div>
                 <p className="text-xs text-slate-500">
-                  Madarsa Darululoom Siddiquia • Johri Farm, Okhla
+                  Reliable home delivery across Johri Farm, Batla House, and Okhla neighborhoods.
                 </p>
               </div>
 
@@ -1137,7 +966,7 @@ export default function App() {
                   className="w-full inline-flex items-center justify-center gap-2 bg-[#1e293b] hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl shadow-xs transition-colors"
                 >
                   <ExternalLink className="w-4 h-4" />
-                  <span>Get Directions</span>
+                  <span>View Location Area</span>
                 </a>
               </div>
             </div>
@@ -1147,13 +976,13 @@ export default function App() {
         </div>
       </section>
 
-      {/* ---------------- 11. FOOTER ---------------- */}
+      {/* ---------------- 8. FOOTER ---------------- */}
       <footer className="bg-[#1e293b] text-slate-300 pt-16 pb-12 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
             
-            {/* Col 1: Brand & Social Purpose */}
+            {/* Col 1: Brand */}
             <div className="md:col-span-6 space-y-4 text-left">
               <div className="flex items-center gap-3.5">
                 <div className="w-12 h-12 rounded-2xl bg-white p-1 flex items-center justify-center shadow-xs">
@@ -1164,15 +993,15 @@ export default function App() {
                     Tuba Enterprises
                   </span>
                   <span className="block text-[11px] text-[#5eead4] font-medium tracking-wider uppercase mt-1">
-                    Serving Water. Educating Futures.
+                    20L Water Bottle Home Delivery
                   </span>
                 </div>
               </div>
               <p className="text-slate-300 text-sm font-semibold max-w-md">
-                “Community Welfare Initiative • Johri Farm, Okhla”
+                “Pure Water. Delivered to Your Door.”
               </p>
               <p className="text-slate-400 text-xs leading-relaxed max-w-md">
-                Serving Okhla families with clean 20-litre water home delivery, with income contributing to the education and daily welfare of 19 students at Madarsa Darululoom Siddiquia.
+                Serving Okhla families and residences with hygienic 20-litre water bottle home delivery. Convenient, fast, and dependable.
               </p>
             </div>
 
@@ -1181,10 +1010,10 @@ export default function App() {
               <div className="text-xs font-bold uppercase tracking-widest text-[#5eead4]">Quick Links</div>
               <ul className="space-y-2 text-sm text-slate-300">
                 <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
-                <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="#about" className="hover:text-white transition-colors">About Us</a></li>
                 <li><a href="#delivery" className="hover:text-white transition-colors">Water Delivery</a></li>
-                <li><a href="#madarsa" className="hover:text-white transition-colors">Madarsa</a></li>
-                <li><a href="#donation" className="hover:text-white transition-colors">Donation</a></li>
+                <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
+                <li><a href="#order-form" className="hover:text-white transition-colors">Book Delivery</a></li>
                 <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
                 <li className="pt-2">
                   <button
@@ -1193,7 +1022,7 @@ export default function App() {
                       setShowAdminModal(true);
                       setAdminError('');
                     }}
-                    className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-[#5eead4] transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-[#5eead4] transition-colors cursor-pointer"
                   >
                     <Lock className="w-3.5 h-3.5" />
                     <span>Staff Portal</span>
@@ -1206,7 +1035,7 @@ export default function App() {
             <div className="md:col-span-3 space-y-3 text-left">
               <div className="text-xs font-bold uppercase tracking-widest text-[#5eead4]">Direct Contact</div>
               <p className="text-sm text-slate-300">
-                Call for deliveries or inquiries:
+                Call or WhatsApp for quick delivery:
               </p>
               <a 
                 href={`tel:${PHONE_NUMBER}`}
@@ -1216,7 +1045,7 @@ export default function App() {
                 {PHONE_DISPLAY}
               </a>
               <div className="pt-2 text-xs text-slate-400">
-                Johri Farm, Okhla, New Delhi - 110025
+                {SERVICE_LOCATION}
               </div>
             </div>
 
@@ -1225,11 +1054,27 @@ export default function App() {
           {/* Copyright */}
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
             <p>© 2026 Tuba Enterprises. All rights reserved.</p>
-            <p className="text-slate-400">Community water delivery initiative in Okhla, New Delhi.</p>
+            <p className="text-slate-400">20L Drinking Water Home Delivery in Okhla, New Delhi.</p>
           </div>
 
         </div>
       </footer>
+
+      {/* ---------------- FLOATING WHATSAPP BUTTON WITH HOVER ANIMATION ---------------- */}
+      <aside aria-label="Quick WhatsApp Contact" className="fixed bottom-6 right-6 z-50">
+        <a
+          href={WHATSAPP_DIRECT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white p-3.5 sm:px-5 sm:py-3.5 rounded-full shadow-2xl hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-108 active:scale-95 animate-pulse-glow"
+          aria-label="Order Water via WhatsApp"
+        >
+          <MessageCircle className="w-6 h-6 fill-white" />
+          <span className="hidden sm:inline font-bold text-sm tracking-wide">
+            Order on WhatsApp
+          </span>
+        </a>
+      </aside>
 
       {/* ---------------- PROTECTED ADMIN PORTAL MODAL ---------------- */}
       {showAdminModal && (
@@ -1288,7 +1133,7 @@ export default function App() {
 
                 <button
                   type="submit"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold py-3.5 rounded-xl transition-all cursor-pointer shadow-sm"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold py-3.5 rounded-xl transition-all cursor-pointer shadow-sm hover:shadow"
                 >
                   <Lock className="w-4 h-4" />
                   <span>Authenticate Session</span>
@@ -1317,8 +1162,8 @@ export default function App() {
                     <span className="font-mono text-slate-900">{PHONE_DISPLAY}</span>
                   </div>
                   <div className="flex justify-between text-slate-600">
-                    <span className="font-semibold">Beneficiary UPI:</span>
-                    <span className="font-mono text-slate-900">{UPI_ID}</span>
+                    <span className="font-semibold">Service Area:</span>
+                    <span className="text-slate-900 font-medium">Okhla, New Delhi</span>
                   </div>
                   <div className="flex justify-between text-slate-600">
                     <span className="font-semibold">Database Exposure:</span>
@@ -1329,7 +1174,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={handleAdminLogout}
-                  className="w-full inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-colors text-sm"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-colors text-sm cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Sign Out</span>
