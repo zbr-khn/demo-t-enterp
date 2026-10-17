@@ -453,41 +453,35 @@ export default function App() {
 
             </div>
 
-            {/* Right Column: Hero Realistic Imagery & Logo Integration */}
+            {/* Right Column: Hero Logo & Direct Order Card */}
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative w-full max-w-md lg:max-w-none">
                 
                 {/* Decorative background glow with brand teal & olive */}
                 <div className="absolute -inset-4 bg-gradient-to-tr from-[#ccfbf1]/60 to-[#ecfccb]/60 rounded-3xl blur-2xl -z-10 transform rotate-1"></div>
                 
-                <div className="bg-white p-3 sm:p-4 rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden relative group hover:shadow-2xl transition-all duration-300">
-                  <div className="aspect-square rounded-2xl overflow-hidden bg-slate-50 relative flex items-center justify-center p-2">
+                <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden relative group hover:shadow-2xl transition-all duration-300 flex flex-col items-center text-center">
+                  
+                  {/* Clean Prominent Logo Display */}
+                  <div className="w-full max-w-[280px] sm:max-w-[320px] aspect-square rounded-2xl bg-white p-4 flex items-center justify-center">
                     <img 
-                      src="/bisleri-20l.png" 
-                      alt="Bisleri 20L Pure Drinking Water Bottle" 
+                      src="/tuba-logo.png" 
+                      alt="Tuba Enterprises Logo" 
                       className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
                     />
-
-                    {/* Logo Watermark Badge on Top Right */}
-                    <div className="absolute top-3.5 right-3.5 w-14 h-14 bg-white/95 backdrop-blur-md rounded-2xl p-1 shadow-md border border-slate-200/80 flex items-center justify-center">
-                      <img src="/tuba-logo.png" alt="Tuba Enterprises Emblem" className="w-full h-full object-contain rounded-xl" />
-                    </div>
-                    
-                    {/* Bottle Tag Overlay */}
-                    <div className="absolute bottom-4 left-4 right-4 bg-[#1e293b]/95 backdrop-blur-md text-white p-3.5 rounded-xl shadow-lg border border-white/10 flex items-center justify-between">
-                      <div>
-                        <div className="text-xs uppercase tracking-wider text-[#5eead4] font-bold">Standard 20-Litre Jar</div>
-                        <div className="text-sm font-semibold text-white">Bisleri • Alzo • Bailey</div>
-                      </div>
-                      <a
-                        href={`tel:${PHONE_NUMBER}`}
-                        className="bg-[#0f766e] hover:bg-[#115e59] text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors"
-                      >
-                        <Phone className="w-3.5 h-3.5" />
-                        Call
-                      </a>
-                    </div>
                   </div>
+
+                  {/* Order Button Leading Directly to Booking Form */}
+                  <div className="w-full pt-6">
+                    <a
+                      href="#order-form"
+                      className="w-full inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold text-base py-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-98 hover:translate-y-[-2px]"
+                    >
+                      <Droplet className="w-5 h-5 fill-white" />
+                      <span>Order Water Now</span>
+                    </a>
+                  </div>
+
                 </div>
 
               </div>
