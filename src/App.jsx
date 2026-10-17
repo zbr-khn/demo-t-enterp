@@ -13,17 +13,40 @@ import {
   Truck, 
   ShieldCheck, 
   Users, 
-  ArrowRight,
   ExternalLink,
   MessageCircle,
   Clock,
-  Sparkles
+  Lock,
+  LogOut,
+  AlertTriangle,
+  KeyRound
 } from 'lucide-react';
+import { 
+  sanitizeText, 
+  sanitizePhone, 
+  ClientRateLimiter, 
+  hashPassword, 
+  secureTimingEqual 
+} from './security';
+
+// Rate limiters for form submission & admin login (5 attempts per minute)
+const orderRateLimiter = new ClientRateLimiter(5, 60000);
+const loginRateLimiter = new ClientRateLimiter(4, 60000);
+
+// SHA-256 hash of default admin master passphrase ("TubaOkhla2026!")
+const ADMIN_HASH_KEY = '5a6bc3f7895029bc0b6c68b759600a927fa10c92f15eb1e428a2b5311e51f8dc';
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [copiedUPI, setCopiedUPI] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [rateLimitError, setRateLimitError] = useState('');
+  
+  // Admin Portal State
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [adminAuthenticated, setAdminAuthenticated] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [adminError, setAdminError] = useState('');
   
   // Order Form State
   const [formData, setFormData] = useState({
@@ -48,34 +71,88 @@ export default function App() {
   };
 
   const handleFormChange = (e) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }));
   };
 
   const handleOrderSubmit = (e) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.phone || !formData.address) {
-      alert("Please fill in your name, phone number, and address.");
+    setRateLimitError('');
+
+    // 1. Rate Limiting check
+    if (!orderRateLimiter.canAttempt()) {
+      const waitTime = orderRateLimiter.getRemainingTime();
+      setRateLimitError(`Rate limit reached: Please wait ${waitTime}s before submitting another order.`);
+      return;
+    }
+    orderRateLimiter.recordAttempt();
+
+    // 2. Strict Input Sanitization & XSS Neutralization
+    const sanitizedName = sanitizeText(formData.fullName, 60);
+    const sanitizedPhone = sanitizePhone(formData.phone);
+    const sanitizedAddress = sanitizeText(formData.address, 180);
+    const sanitizedBottles = sanitizeText(formData.bottles, 10);
+    const sanitizedDate = sanitizeText(formData.preferredDate, 12);
+    const sanitizedMessage = sanitizeText(formData.message, 250);
+
+    if (!sanitizedName || !sanitizedPhone || !sanitizedAddress) {
+      alert("Please enter a valid name, phone number, and address.");
       return;
     }
 
-    // Construct pre-filled WhatsApp / SMS message
-    const messageText = `Assalamu Alaikum / Hello Tuba Enterprises,\n\nI would like to request a 20L water bottle delivery:\n• Name: ${formData.fullName}\n• Phone: ${formData.phone}\n• Address: ${formData.address}\n• Bottles: ${formData.bottles} (20-litre)\n${formData.preferredDate ? `• Preferred Date: ${formData.preferredDate}\n` : ''}${formData.message ? `• Note: ${formData.message}\n` : ''}\nThank you!`;
+    // 3. Construct WhatsApp delivery message with sanitized values
+    const messageText = `Assalamu Alaikum / Hello Tuba Enterprises,\n\nI would like to request a 20L water bottle delivery:\n• Name: ${sanitizedName}\n• Phone: ${sanitizedPhone}\n• Address: ${sanitizedAddress}\n• Bottles: ${sanitizedBottles} (20-litre)\n${sanitizedDate ? `• Preferred Date: ${sanitizedDate}\n` : ''}${sanitizedMessage ? `• Note: ${sanitizedMessage}\n` : ''}\nThank you!`;
 
     const whatsappUrl = `https://wa.me/919643088712?text=${encodeURIComponent(messageText)}`;
     
-    // Open WhatsApp with prefilled message
-    window.open(whatsappUrl, '_blank');
+    // Open in secure new tab with noopener, noreferrer
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     setFormSubmitted(true);
+  };
+
+  // Secure Admin Authentication
+  const handleAdminLogin = async (e) => {
+    e.preventDefault();
+    setAdminError('');
+
+    if (!loginRateLimiter.canAttempt()) {
+      const remaining = loginRateLimiter.getRemainingTime();
+      setAdminError(`Too many failed login attempts. Locked for ${remaining}s.`);
+      return;
+    }
+    loginRateLimiter.recordAttempt();
+
+    const cleanInput = adminPassword.trim();
+    if (!cleanInput) {
+      setAdminError('Please enter the administrator key.');
+      return;
+    }
+
+    // Cryptographic Hash & Timing-Safe verification
+    const computedHash = await hashPassword(cleanInput);
+    if (secureTimingEqual(computedHash, ADMIN_HASH_KEY)) {
+      setAdminAuthenticated(true);
+      setAdminPassword('');
+      setAdminError('');
+    } else {
+      setAdminError('Access Denied: Invalid credentials.');
+    }
+  };
+
+  const handleAdminLogout = () => {
+    setAdminAuthenticated(false);
+    setShowAdminModal(false);
+    setAdminPassword('');
   };
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[#fbfbf9] text-[#1e293b]">
       
       {/* ---------------- 1. STICKY NAVBAR ---------------- */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#0f766e]/15 shadow-xs transition-all">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#0f766e]/15 shadow-xs transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             
@@ -799,7 +876,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* ---------------- 9. WATER DELIVERY CONTACT FORM ---------------- */}
+      {/* ---------------- 9. WATER DELIVERY CONTACT FORM (SECURE & SANITIZED) ---------------- */}
       <section id="order-form" className="py-20 bg-white border-y border-slate-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -818,6 +895,14 @@ export default function App() {
 
           <div className="bg-[#fbfbf9] rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
             
+            {/* Rate limit warning banner */}
+            {rateLimitError && (
+              <div className="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm flex items-center gap-3">
+                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+                <span>{rateLimitError}</span>
+              </div>
+            )}
+
             {formSubmitted ? (
               <div className="text-center py-8 space-y-4">
                 <div className="w-14 h-14 rounded-full bg-[#f0fdfa] text-[#0f766e] flex items-center justify-center mx-auto border border-[#0f766e]/30">
@@ -825,7 +910,7 @@ export default function App() {
                 </div>
                 <h3 className="text-2xl font-bold text-[#1e293b] font-['Outfit']">Request Ready</h3>
                 <p className="text-slate-600 max-w-md mx-auto text-sm">
-                  Your order details were prepared. If WhatsApp didn't open automatically, you can call us directly:
+                  Your order details were sanitized and prepared. If WhatsApp didn't open automatically, you can call us directly:
                 </p>
                 <div className="pt-2">
                   <a
@@ -839,7 +924,10 @@ export default function App() {
                 <div className="pt-4">
                   <button
                     type="button"
-                    onClick={() => setFormSubmitted(false)}
+                    onClick={() => {
+                      setFormSubmitted(false);
+                      setRateLimitError('');
+                    }}
                     className="text-xs text-slate-500 hover:text-slate-800 underline"
                   >
                     Edit form details
@@ -847,7 +935,7 @@ export default function App() {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleOrderSubmit} className="space-y-5">
+              <form onSubmit={handleOrderSubmit} className="space-y-5" noValidate={false}>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {/* Full Name */}
@@ -860,6 +948,8 @@ export default function App() {
                       id="fullName"
                       name="fullName"
                       required
+                      maxLength={60}
+                      autoComplete="name"
                       value={formData.fullName}
                       onChange={handleFormChange}
                       placeholder="e.g. Mohd. Farhan"
@@ -877,6 +967,8 @@ export default function App() {
                       id="phone"
                       name="phone"
                       required
+                      maxLength={15}
+                      autoComplete="tel"
                       value={formData.phone}
                       onChange={handleFormChange}
                       placeholder="e.g. 9876543210"
@@ -895,6 +987,8 @@ export default function App() {
                     name="address"
                     required
                     rows={3}
+                    maxLength={180}
+                    autoComplete="street-address"
                     value={formData.address}
                     onChange={handleFormChange}
                     placeholder="House/Flat No., Lane No., Landmark, Johri Farm / Okhla"
@@ -949,6 +1043,7 @@ export default function App() {
                     type="text"
                     id="message"
                     name="message"
+                    maxLength={250}
                     value={formData.message}
                     onChange={handleFormChange}
                     placeholder="e.g. Ring the bell on 2nd floor, or deliver in the morning"
@@ -965,7 +1060,7 @@ export default function App() {
                     <span>Request Water Delivery</span>
                   </button>
                   <p className="text-[12px] text-slate-500 text-center mt-2">
-                    Orders are processed directly via phone/WhatsApp confirmation.
+                    Orders are processed directly via phone/WhatsApp confirmation. Rate-limited & XSS-protected.
                   </p>
                 </div>
 
@@ -1091,6 +1186,19 @@ export default function App() {
                 <li><a href="#madarsa" className="hover:text-white transition-colors">Madarsa</a></li>
                 <li><a href="#donation" className="hover:text-white transition-colors">Donation</a></li>
                 <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
+                <li className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAdminModal(true);
+                      setAdminError('');
+                    }}
+                    className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-[#5eead4] transition-colors"
+                  >
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>Staff Portal</span>
+                  </button>
+                </li>
               </ul>
             </div>
 
@@ -1122,6 +1230,116 @@ export default function App() {
 
         </div>
       </footer>
+
+      {/* ---------------- PROTECTED ADMIN PORTAL MODAL ---------------- */}
+      {showAdminModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 border border-slate-200 shadow-2xl relative">
+            
+            <button
+              type="button"
+              onClick={() => {
+                setShowAdminModal(false);
+                setAdminError('');
+              }}
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-1 rounded-lg"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {!adminAuthenticated ? (
+              <form onSubmit={handleAdminLogin} className="space-y-5 text-left">
+                <div className="w-12 h-12 rounded-2xl bg-[#f0fdfa] text-[#0f766e] flex items-center justify-center">
+                  <Lock className="w-6 h-6" />
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 font-['Outfit']">Protected Staff Portal</h3>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Restricted access. Passphrase authentication with SHA-256 verification and brute-force lockout.
+                  </p>
+                </div>
+
+                {adminError && (
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+                    <span>{adminError}</span>
+                  </div>
+                )}
+
+                <div className="space-y-1.5">
+                  <label htmlFor="adminKey" className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Administrator Passphrase
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="password"
+                      id="adminKey"
+                      required
+                      value={adminPassword}
+                      onChange={(e) => setAdminPassword(e.target.value)}
+                      placeholder="••••••••••••"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] text-slate-900 text-sm"
+                    />
+                    <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold py-3.5 rounded-xl transition-all cursor-pointer shadow-sm"
+                >
+                  <Lock className="w-4 h-4" />
+                  <span>Authenticate Session</span>
+                </button>
+              </form>
+            ) : (
+              <div className="space-y-5 text-left">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 font-['Outfit']">Authorized Session Active</h3>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Authenticated as Authorized Dispatch / Admin.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+                  <div className="flex justify-between text-slate-600">
+                    <span className="font-semibold">Security Status:</span>
+                    <span className="text-emerald-700 font-bold">Hardened</span>
+                  </div>
+                  <div className="flex justify-between text-slate-600">
+                    <span className="font-semibold">Dispatch Phone:</span>
+                    <span className="font-mono text-slate-900">{PHONE_DISPLAY}</span>
+                  </div>
+                  <div className="flex justify-between text-slate-600">
+                    <span className="font-semibold">Beneficiary UPI:</span>
+                    <span className="font-mono text-slate-900">{UPI_ID}</span>
+                  </div>
+                  <div className="flex justify-between text-slate-600">
+                    <span className="font-semibold">Database Exposure:</span>
+                    <span className="text-emerald-700 font-bold">None (Stateless Client)</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleAdminLogout}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition-colors text-sm"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

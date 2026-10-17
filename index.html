@@ -2,16 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="icon" type="image/png" href="/tuba-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tuba Enterprises | 20L Water Delivery in Okhla, New Delhi</title>
     <meta name="description" content="Tuba Enterprises provides 20-litre water bottle home delivery in Okhla, New Delhi, while supporting Madarsa Darululoom Siddiquia and its 19 students." />
+    
+    <!-- Security Headers via HTTP-Equiv -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    
+    <!-- Content Security Policy (CSP) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none';" />
+
     <!-- Preconnect Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-slate-50 text-slate-900 antialiased selection:bg-sky-200 selection:text-sky-900">
+  <body class="bg-[#fbfbf9] text-slate-900 antialiased selection:bg-teal-200 selection:text-teal-900">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
