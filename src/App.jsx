@@ -453,36 +453,30 @@ export default function App() {
 
             </div>
 
-            {/* Right Column: Hero Logo & Direct Order Card */}
+            {/* Right Column: Hero Logo Box & Direct Order CTA */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-md lg:max-w-none">
+              <div className="relative w-full max-w-md lg:max-w-none space-y-4">
                 
                 {/* Decorative background glow with brand teal & olive */}
                 <div className="absolute -inset-4 bg-gradient-to-tr from-[#ccfbf1]/60 to-[#ecfccb]/60 rounded-3xl blur-2xl -z-10 transform rotate-1"></div>
                 
-                <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden relative group hover:shadow-2xl transition-all duration-300 flex flex-col items-center text-center">
-                  
-                  {/* Clean Prominent Logo Display */}
-                  <div className="w-full max-w-[280px] sm:max-w-[320px] aspect-square rounded-2xl bg-white p-4 flex items-center justify-center">
-                    <img 
-                      src="/tuba-logo.png" 
-                      alt="Tuba Enterprises Logo" 
-                      className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-
-                  {/* Order Button Leading Directly to Booking Form */}
-                  <div className="w-full pt-6">
-                    <a
-                      href="#order-form"
-                      className="w-full inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold text-base py-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-98 hover:translate-y-[-2px]"
-                    >
-                      <Droplet className="w-5 h-5 fill-white" />
-                      <span>Order Water Now</span>
-                    </a>
-                  </div>
-
+                {/* Hero image box: The image IS the box, spreading to all borders with 0 padding */}
+                <div className="w-full aspect-square rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden bg-[#faf8f5] group hover:shadow-3xl transition-all duration-300">
+                  <img 
+                    src="/tuba-logo.png" 
+                    alt="Tuba Enterprises Logo" 
+                    className="w-full h-full object-cover scale-[1.02] transform group-hover:scale-106 transition-transform duration-500"
+                  />
                 </div>
+
+                {/* Order Button Leading Directly to Booking Form */}
+                <a
+                  href="#order-form"
+                  className="w-full inline-flex items-center justify-center gap-2.5 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold text-base py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer active:scale-98 hover:translate-y-[-2px]"
+                >
+                  <Droplet className="w-5 h-5 fill-white" />
+                  <span>Order Water Now</span>
+                </a>
 
               </div>
             </div>
