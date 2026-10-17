@@ -1109,7 +1109,6 @@ export default function App() {
                       autoComplete="name"
                       value={formData.fullName}
                       onChange={handleFormChange}
-                      placeholder="e.g. Farhan Khan"
                       className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm transition-colors"
                     />
                   </div>
@@ -1184,6 +1183,7 @@ export default function App() {
                       type="date"
                       id="preferredDate"
                       name="preferredDate"
+                      min={new Date().toISOString().split('T')[0]}
                       value={formData.preferredDate}
                       onChange={handleFormChange}
                       className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm transition-colors"
