@@ -368,10 +368,10 @@ export default function App() {
               </a>
               <a
                 href={`tel:${PHONE_NUMBER}`}
-                className="w-full inline-flex items-center justify-center gap-2 bg-[#1e293b] text-white font-semibold text-center py-3 rounded-xl shadow-sm"
+                className="w-full inline-flex items-center justify-center gap-2 bg-[#1e293b] hover:bg-slate-800 text-white font-semibold text-center py-3 rounded-xl shadow-sm transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                Call {PHONE_DISPLAY}
+                <span>Call Us</span>
               </a>
             </div>
           </div>
@@ -427,7 +427,7 @@ export default function App() {
                   className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold text-base px-6 py-3.5 rounded-xl shadow-2xs hover:shadow-xs transition-all active:scale-98 hover:border-[#0f766e]"
                 >
                   <Phone className="w-5 h-5 text-[#0f766e]" />
-                  <span>Call {PHONE_DISPLAY}</span>
+                  <span>Call Us</span>
                 </a>
               </div>
 
@@ -821,7 +821,7 @@ export default function App() {
                     className="inline-flex items-center justify-center gap-2.5 bg-[#0f766e] hover:bg-[#115e59] text-white font-semibold text-base px-6 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all hover:translate-y-[-2px]"
                   >
                     <Phone className="w-5 h-5" />
-                    <span>Order a 20L Bottle</span>
+                    <span>Call Us</span>
                   </a>
 
                   <a
@@ -844,7 +844,7 @@ export default function App() {
                 </div>
 
                 <div className="text-sm text-slate-500 font-medium">
-                  Or call directly: <a href={`tel:${PHONE_NUMBER}`} className="text-slate-900 font-bold hover:underline hover:text-[#0f766e]">{PHONE_DISPLAY}</a>
+                  Direct phone orders available: <a href={`tel:${PHONE_NUMBER}`} className="text-slate-900 font-bold hover:underline hover:text-[#0f766e]">Call Us</a>
                 </div>
 
               </div>
@@ -883,7 +883,7 @@ export default function App() {
                   Choose Brand & Order
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Select Bisleri, Alzo, Bailey, or your custom brand. Call <a href={`tel:${PHONE_NUMBER}`} className="font-semibold text-[#0f766e] hover:underline">{PHONE_DISPLAY}</a> or book online.
+                  Select Bisleri, Alzo, Bailey, or your custom brand. <a href={`tel:${PHONE_NUMBER}`} className="font-semibold text-[#0f766e] hover:underline">Call Us</a> or book online.
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-slate-200/80 text-xs font-medium text-slate-500 flex items-center gap-1.5">
@@ -950,7 +950,7 @@ export default function App() {
               Order Water for Your Home
             </h2>
             <p className="text-slate-600 text-base">
-              Select your water brand and enter your address below. Your request will open directly in WhatsApp or you can dial us at {PHONE_DISPLAY}.
+              Select your water brand and enter your address below. Your request will open directly in WhatsApp or you can call us directly.
             </p>
             <div className="w-16 h-1 bg-[#0f766e] mx-auto rounded-full"></div>
           </div>
@@ -980,7 +980,7 @@ export default function App() {
                     className="inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold px-6 py-3 rounded-xl shadow-md transition-colors"
                   >
                     <Phone className="w-4 h-4" />
-                    <span>Call {PHONE_DISPLAY}</span>
+                    <span>Call Us</span>
                   </a>
                   <a
                     href={WHATSAPP_DIRECT_URL}
@@ -1132,6 +1132,7 @@ export default function App() {
                       required
                       inputMode="numeric"
                       pattern="[0-9]{10}"
+                      minLength={10}
                       maxLength={10}
                       autoComplete="tel"
                       value={formData.phone}
@@ -1264,8 +1265,9 @@ export default function App() {
                 <p className="text-slate-600 text-sm leading-relaxed">
                   Call or WhatsApp us directly to schedule your 20-litre water bottle delivery or ask about brand availability.
                 </p>
-                <div className="text-2xl font-mono font-bold text-slate-900 pt-1">
-                  {PHONE_DISPLAY}
+                <div className="pt-2 flex items-center gap-2 text-sm font-semibold text-[#0f766e]">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span>Direct phone ordering & quick delivery</span>
                 </div>
               </div>
 
@@ -1275,7 +1277,7 @@ export default function App() {
                   className="flex-1 inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold py-3.5 rounded-xl shadow-xs transition-colors"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>Call Now</span>
+                  <span>Call Us</span>
                 </a>
 
                 <a
@@ -1385,13 +1387,24 @@ export default function App() {
               <p className="text-sm text-slate-300">
                 Call or WhatsApp for quick delivery:
               </p>
-              <a 
-                href={`tel:${PHONE_NUMBER}`}
-                className="inline-flex items-center gap-2 text-white font-mono font-bold text-lg hover:text-[#5eead4] transition-colors"
-              >
-                <Phone className="w-4 h-4 text-[#5eead4]" />
-                {PHONE_DISPLAY}
-              </a>
+              <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
+                <a 
+                  href={`tel:${PHONE_NUMBER}`}
+                  className="inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold px-4 py-2.5 rounded-xl text-sm shadow-xs transition-colors"
+                >
+                  <Phone className="w-4 h-4" />
+                  <span>Call Us</span>
+                </a>
+                <a
+                  href={WHATSAPP_DIRECT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold px-4 py-2.5 rounded-xl text-sm shadow-xs transition-colors"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <span>WhatsApp</span>
+                </a>
+              </div>
               <div className="pt-2 text-xs text-slate-400">
                 {SERVICE_LOCATION}
               </div>
