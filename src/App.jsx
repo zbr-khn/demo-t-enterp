@@ -41,6 +41,8 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [rateLimitError, setRateLimitError] = useState('');
+  const [submittedWhatsappUrl, setSubmittedWhatsappUrl] = useState('');
+  const [submittedOrderDetails, setSubmittedOrderDetails] = useState(null);
   
   // Admin Portal State
   const [showAdminModal, setShowAdminModal] = useState(false);
@@ -175,14 +177,55 @@ export default function App() {
       ? `Other (${sanitizedCustomBrand})` 
       : sanitizedBrand;
 
-    // 3. Construct WhatsApp delivery message with sanitized values
-    const messageText = `Hello Tuba Enterprises,\n\nI would like to request a 20L water bottle delivery:\n• Name: ${sanitizedName}\n• Phone: ${sanitizedPhone}\n• Address: ${sanitizedAddress}\n• Brand: ${brandDisplay}\n• Quantity: ${sanitizedBottles} (20-litre)\n${sanitizedDate ? `• Preferred Date: ${sanitizedDate}\n` : ''}${sanitizedMessage ? `• Note: ${sanitizedMessage}\n` : ''}\nThank you!`;
+    const bottleCount = parseInt(sanitizedBottles, 10) || 1;
+    const bottlePlural = bottleCount > 1 ? 'Jars' : 'Jar';
 
-    const whatsappUrl = `https://wa.me/919866063694?text=${encodeURIComponent(messageText)}`;
-    
-    // Open in secure new tab with noopener, noreferrer
-    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    // 3. Construct WhatsApp delivery message with full structured form
+    const orderLines = [
+      `*NEW 20L WATER BOTTLE ORDER*`,
+      `*Tuba Enterprises - Water Delivery*`,
+      `━━━━━━━━━━━━━━━━━━━━`,
+      `👤 *Customer Name:* ${sanitizedName}`,
+      `📱 *Customer Phone:* +91 ${sanitizedPhone}`,
+      `📍 *Delivery Address:* ${sanitizedAddress}`,
+      `💧 *Water Brand:* ${brandDisplay}`,
+      `📦 *Quantity:* ${sanitizedBottles} ${bottlePlural} (20 Litre)`,
+      sanitizedDate ? `📅 *Preferred Date:* ${sanitizedDate}` : null,
+      sanitizedMessage ? `📝 *Special Instructions:* ${sanitizedMessage}` : null,
+      `━━━━━━━━━━━━━━━━━━━━`,
+      `Please confirm delivery timing and dispatch details.`
+    ].filter(Boolean);
+
+    const fullMessage = orderLines.join('\n');
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=919866063694&text=${encodeURIComponent(fullMessage)}`;
+
+    setSubmittedWhatsappUrl(whatsappUrl);
+    setSubmittedOrderDetails({
+      name: sanitizedName,
+      phone: sanitizedPhone,
+      address: sanitizedAddress,
+      brand: brandDisplay,
+      bottles: sanitizedBottles,
+      bottlePlural: bottlePlural,
+      date: sanitizedDate,
+      message: sanitizedMessage
+    });
     setFormSubmitted(true);
+
+    // 4. Trigger direct navigation to WhatsApp with full structured details
+    try {
+      const isMobile = typeof navigator !== 'undefined' && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href = whatsappUrl;
+      } else {
+        const opened = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+          window.location.href = whatsappUrl;
+        }
+      }
+    } catch {
+      window.location.href = whatsappUrl;
+    }
   };
 
   // Secure Admin Authentication
@@ -959,34 +1002,75 @@ export default function App() {
               </div>
             )}
 
-            {formSubmitted ? (
-              <div className="text-center py-8 space-y-4">
-                <div className="w-14 h-14 rounded-full bg-[#f0fdfa] text-[#0f766e] flex items-center justify-center mx-auto border border-[#0f766e]/30">
-                  <CheckCircle2 className="w-8 h-8" />
+            {formSubmitted && submittedOrderDetails ? (
+              <div className="text-center py-6 space-y-5 animate-in fade-in duration-300">
+                <div className="w-16 h-16 rounded-full bg-[#f0fdfa] text-[#0f766e] flex items-center justify-center mx-auto border-2 border-[#0f766e]/30 shadow-xs">
+                  <CheckCircle2 className="w-9 h-9" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#1e293b] font-['Outfit']">Request Ready</h3>
-                <p className="text-slate-600 max-w-md mx-auto text-sm">
-                  Your order details were sanitized and prepared. If WhatsApp didn't open automatically, you can call us directly:
-                </p>
-                <div className="pt-2 flex flex-col sm:flex-row justify-center gap-3">
+                <div className="space-y-1.5">
+                  <h3 className="text-2xl font-bold text-[#1e293b] font-['Outfit']">Order Ready to Send!</h3>
+                  <p className="text-slate-600 max-w-md mx-auto text-sm">
+                    Your complete booking details are prepared below. Click to send your full order directly to Tuba Enterprises on WhatsApp:
+                  </p>
+                </div>
+
+                {/* Structured Order Summary Card */}
+                <div className="max-w-lg mx-auto bg-white rounded-2xl p-5 border border-slate-200 shadow-xs text-left space-y-3">
+                  <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#0f766e]">Structured Order Details</span>
+                    <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#f0fdfa] text-[#0f766e] border border-[#0f766e]/20">
+                      {submittedOrderDetails.brand} • {submittedOrderDetails.bottles} {submittedOrderDetails.bottlePlural}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-700">
+                    <div>
+                      <span className="font-semibold text-slate-500 block">Customer Name:</span>
+                      <span className="font-medium text-slate-900">{submittedOrderDetails.name}</span>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-slate-500 block">Phone Number:</span>
+                      <span className="font-medium text-slate-900">+91 {submittedOrderDetails.phone}</span>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <span className="font-semibold text-slate-500 block">Delivery Address:</span>
+                      <span className="font-medium text-slate-900">{submittedOrderDetails.address}</span>
+                    </div>
+                    {submittedOrderDetails.date && (
+                      <div>
+                        <span className="font-semibold text-slate-500 block">Preferred Date:</span>
+                        <span className="font-medium text-slate-900">{submittedOrderDetails.date}</span>
+                      </div>
+                    )}
+                    {submittedOrderDetails.message && (
+                      <div className="sm:col-span-2">
+                        <span className="font-semibold text-slate-500 block">Special Instructions:</span>
+                        <span className="font-medium text-slate-900">{submittedOrderDetails.message}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Primary Action Button with FULL Structured WhatsApp URL */}
+                <div className="pt-2 flex flex-col sm:flex-row justify-center gap-3.5 max-w-md mx-auto">
+                  <a
+                    href={submittedWhatsappUrl || WHATSAPP_DIRECT_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex items-center justify-center gap-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-base py-3.5 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 active:scale-98"
+                  >
+                    <MessageCircle className="w-5 h-5 fill-white" />
+                    <span>Send Order via WhatsApp</span>
+                  </a>
                   <a
                     href={`tel:${PHONE_NUMBER}`}
-                    className="inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold px-6 py-3 rounded-xl shadow-md transition-colors"
+                    className="inline-flex items-center justify-center gap-2 bg-[#0f766e] hover:bg-[#115e59] text-white font-bold py-3.5 px-6 rounded-xl shadow-md transition-colors"
                   >
                     <Phone className="w-4 h-4" />
                     <span>Call Us</span>
                   </a>
-                  <a
-                    href={WHATSAPP_DIRECT_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold px-6 py-3 rounded-xl shadow-md transition-colors"
-                  >
-                    <MessageCircle className="w-4 h-4 fill-white" />
-                    <span>Open WhatsApp</span>
-                  </a>
                 </div>
-                <div className="pt-4">
+
+                <div className="pt-2">
                   <button
                     type="button"
                     onClick={() => {
@@ -995,7 +1079,7 @@ export default function App() {
                     }}
                     className="text-xs text-slate-500 hover:text-slate-800 underline cursor-pointer"
                   >
-                    Edit form details
+                    ← Edit form details or place another order
                   </button>
                 </div>
               </div>
