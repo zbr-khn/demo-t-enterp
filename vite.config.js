@@ -8,4 +8,27 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups'
+    }
+  },
+  preview: {
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups'
+    }
+  },
+  build: {
+    sourcemap: false
+  }
 })

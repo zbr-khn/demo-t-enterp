@@ -8,6 +8,7 @@ export function sanitizeText(input, maxLength = 250) {
   return input
     .trim()
     .replace(/[<>'"`;(){}[\]\\]/g, '') // remove HTML & scripting characters
+    // eslint-disable-next-line no-control-regex
     .replace(/[\x00-\x1F\x7F]/g, '')    // remove control characters
     .slice(0, maxLength);
 }
@@ -62,12 +63,29 @@ export function secureTimingEqual(a, b) {
 }
 
 /**
- * SHA-256 password hash using standard Web Crypto API (PBKDF2/SHA-256 standard)
+ * Cryptographically-secure PBKDF2 password derivation (100,000 iterations of HMAC-SHA-256)
+ * Salted to prevent rainbow tables and dictionary attacks.
  */
-export async function hashPassword(password) {
+export async function hashPassword(password, salt = 'tuba-enterprises-salt-2026') {
+  if (typeof password !== 'string') return '';
   const enc = new TextEncoder();
-  const data = enc.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(password),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits']
+  );
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: enc.encode(salt),
+      iterations: 100000,
+      hash: 'SHA-256'
+    },
+    keyMaterial,
+    256
+  );
+  const hashArray = Array.from(new Uint8Array(derivedBits));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }

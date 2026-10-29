@@ -15,9 +15,6 @@ import {
   LogOut,
   AlertTriangle,
   KeyRound,
-  Sparkles,
-  Calendar,
-  Package,
   Check,
   HelpCircle,
   ArrowRight
@@ -34,8 +31,11 @@ import {
 const orderRateLimiter = new ClientRateLimiter(5, 60000);
 const loginRateLimiter = new ClientRateLimiter(4, 60000);
 
-// SHA-256 hash of default admin master passphrase ("TubaOkhla2026!")
-const ADMIN_HASH_KEY = '5a6bc3f7895029bc0b6c68b759600a927fa10c92f15eb1e428a2b5311e51f8dc';
+// PBKDF2-HMAC-SHA256 hash (100,000 rounds) for staff portal verification
+const ADMIN_HASH_KEY = import.meta.env.VITE_ADMIN_HASH || '5e3bc001f16d8e408d7860bc2e80b5cd5455cbfceac44a78dff6f2ac746aa8c3';
+
+// Minimum allowed delivery date (current date formatted YYYY-MM-DD)
+const MIN_DELIVERY_DATE = new Date().toISOString().split('T')[0];
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -67,49 +67,6 @@ export default function App() {
   const SERVICE_LOCATION = "Johri Farm, Okhla, New Delhi - 110025";
   const MAPS_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Johri Farm, Okhla, New Delhi 110025");
   const WHATSAPP_DIRECT_URL = "https://wa.me/919866063694?text=" + encodeURIComponent("Hello Tuba Enterprises, I would like to order 20L drinking water bottles.");
-
-  // Brand catalogue details
-  const brands = [
-    {
-      id: 'bisleri',
-      name: 'Bisleri 20L',
-      tagline: 'With Added Minerals',
-      description: 'Trusted multi-stage purified drinking water jar with minerals.',
-      image: '/bisleri-20l.png',
-      themeColor: '#009775',
-      badgeBg: 'bg-[#e6f7f3]',
-      badgeText: 'text-[#009775]',
-      borderHover: 'hover:border-[#009775]',
-      popular: true,
-      accent: 'Bisleri'
-    },
-    {
-      id: 'alzo',
-      name: 'Alzo Life 20L',
-      tagline: 'Pure & Refreshing',
-      description: 'Premium quality treated packaged drinking water with tamper-evident yellow cap.',
-      image: '/alzo-20l.png',
-      themeColor: '#eab308',
-      badgeBg: 'bg-[#fefce8]',
-      badgeText: 'text-[#a16207]',
-      borderHover: 'hover:border-[#eab308]',
-      popular: false,
-      accent: 'Alzo'
-    },
-    {
-      id: 'bailey',
-      name: 'Bailey 20L',
-      tagline: 'Exclusive Mineral Water',
-      description: 'Packaged mineral water jar by Parle Agro with purple safety seal.',
-      image: '/bailey-20l.png',
-      themeColor: '#7c3aed',
-      badgeBg: 'bg-[#f5f3ff]',
-      badgeText: 'text-[#6d28d9]',
-      borderHover: 'hover:border-[#7c3aed]',
-      popular: false,
-      accent: 'Bailey'
-    }
-  ];
 
   const handleSelectBrand = (brandName) => {
     setFormData(prev => ({
@@ -1271,7 +1228,7 @@ export default function App() {
                       type="date"
                       id="preferredDate"
                       name="preferredDate"
-                      min={new Date().toISOString().split('T')[0]}
+                      min={MIN_DELIVERY_DATE}
                       value={formData.preferredDate}
                       onChange={handleFormChange}
                       className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#0f766e] bg-white text-slate-900 text-sm transition-colors"
